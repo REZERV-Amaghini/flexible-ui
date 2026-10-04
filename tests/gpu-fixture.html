@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ambient GPU renderer verification</title>
+  <style>
+    :root { color-scheme: dark; font: 16px/1.5 system-ui, sans-serif; background: #111318; color: #e7e9ee; }
+    body { max-width: 1080px; margin: 32px auto; padding: 0 24px; }
+    button { color: inherit; background: #303747; border: 1px solid #697389; border-radius: 24px; padding: 10px 22px; font: inherit; cursor: pointer; }
+    button:disabled { opacity: .5; cursor: wait; }
+    #status { display: inline-block; margin-left: 16px; }
+    #status[data-state="passed"] { color: #88dda5; }
+    #status[data-state="failed"] { color: #ffaba9; }
+    #status[data-state="unavailable"] { color: #f1d78d; }
+    pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #1a1e27; border: 1px solid #343b4b; border-radius: 12px; padding: 18px; }
+    #previews { display: flex; gap: 20px; flex-wrap: wrap; }
+    figure { margin: 0; }
+    canvas { max-width: 400px; width: 100%; border: 1px solid #444b5c; border-radius: 8px; }
+    figcaption { margin-bottom: 8px; }
+    .note { color: #b9c0cf; }
+  </style>
+</head>
+<body>
+  <h1>Ambient GPU renderer verification</h1>
+  <p>This compares the GPU projection with the existing Canvas 2D renderer using static frames. No video, rapid flashing, or animation is displayed.</p>
+  <button id="run" type="button">Run tests</button><output id="status" data-state="idle">Ready</output>
+  <p class="note">The benchmark includes frame inspection and projection, followed by GPU completion. It excludes video capture, bitmap transfer, CSS blur, and YouTube. Its results do not measure YouTube performance.</p>
+  <pre id="result" aria-live="polite">Click Run tests to verify this browser.</pre>
+  <div id="previews"></div>
+  <script src="/black-bar-detector.js"></script>
+  <script src="/renderer.js"></script>
+  <script src="/gpu-renderer.js"></script>
+  <script src="/check-gpu-browser.js"></script>
+</body>
+</html>

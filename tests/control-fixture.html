@@ -1,0 +1,174 @@
+<!doctype html>
+<html class="yac-active" dark><head><meta charset="utf-8"><title>Shared control pixel fixture</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+html{--yt-spec-text-primary:#0f0f0f;--native-page:#fff;--native-tonal:#0000000d;--native-filled:#0f0f0f;--native-filled-text:#fff;--native-border:#0005;--native-placeholder:#606060;font:14px/1.3 system-ui;color:var(--yt-spec-text-primary);background:var(--native-page)}
+html[dark]{--yt-spec-text-primary:#eee;--native-page:#0f0f0f;--native-tonal:#ffffff1a;--native-filled:#f1f1f1;--native-filled-text:#0f0f0f;--native-border:#fff5;--native-placeholder:#aaa}
+*{box-sizing:border-box}body{margin:0;background:var(--native-page);color:var(--yt-spec-text-primary)}
+#fixture-toolbar{position:relative;z-index:5;padding:10px 14px;color:#eee;background:#18212e}
+h1{font-size:15px;margin:0 0 6px}#fixture-toolbar button{padding:6px 9px;margin-right:4px;border:0;border-radius:5px;background:#425169;color:#fff;font:12px system-ui;cursor:pointer}
+#fixture-state{margin-top:6px;font-size:12px}ytd-app{display:block;position:relative;min-height:calc(100vh - 100px);background:var(--native-page)}
+#fixture-density-row{display:flex;align-items:center;gap:12px;margin-top:8px;max-width:600px}#fixture-density{flex:1}#fixture-density-value{min-width:60px}#fixture-density-help{font-size:12px;margin:6px 0 0}
+#yac-background{background:#fff}html[data-backdrop="black"] #yac-background{background:#000}html[data-backdrop="color"] #yac-background{background:linear-gradient(125deg,#ec44ff,#64c5ed 55%,#ffb265)}
+ytd-watch-flexy{display:block;padding:12px 14px 8px;max-width:860px;margin:auto}
+#fixture-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 14px}
+.case-label{display:table;margin:0 0 4px;padding:2px 5px;border-radius:4px;font-size:11px;background:#18212e;color:#eee}
+button,input{font:14px system-ui;color:var(--yt-spec-text-primary)}
+.ytSpecButtonShapeNextHost{position:relative;display:flex;align-items:center;gap:8px;width:100%;height:44px;padding:0 14px;border:0;border-radius:22px;cursor:pointer;overflow:hidden;background:transparent;color:var(--yt-spec-text-primary)}
+.ytSpecButtonShapeNextTonal{background:var(--native-tonal)}.ytSpecButtonShapeNextFilled{background:var(--native-filled);color:var(--native-filled-text)}
+.ytSpecButtonShapeNextOutline{border:1px solid var(--native-border)}.ytSpecButtonShapeNextHost:disabled{opacity:.38;cursor:default}
+.ytSpecButtonShapeNextHost svg{width:24px;height:24px;flex-shrink:0;fill:currentColor}.ytSpecButtonShapeNextHost .copy{position:relative;z-index:1}
+yt-touch-feedback-shape{position:absolute;inset:0;pointer-events:none;border-radius:inherit}
+:is(.ytSpecTouchFeedbackShapeFill,.yt-spec-touch-feedback-shape__fill){position:absolute;inset:0;border-radius:inherit;background:rgba(255,255,255,.16);opacity:0}
+button:not(:disabled):is(:hover,:focus-visible) :is(.ytSpecTouchFeedbackShapeFill,.yt-spec-touch-feedback-shape__fill){opacity:1}
+html[data-feedback-mode="opacity"] :is(.ytSpecTouchFeedbackShapeFill,.yt-spec-touch-feedback-shape__fill){background:rgb(255,255,255)}
+html[data-feedback-mode="opacity"] button:not(:disabled):is(:hover,:focus-visible) :is(.ytSpecTouchFeedbackShapeFill,.yt-spec-touch-feedback-shape__fill){opacity:.16}
+.fixture-tail-running{transition:opacity .2s linear}
+.fixture-tail-active{opacity:1!important}html[data-feedback-mode="opacity"] .fixture-tail-active{opacity:.16!important}
+button:focus-visible,input:focus-visible{outline:2px solid #3ea6ff;outline-offset:2px}
+yt-chip-cloud-renderer,yt-chip-cloud-chip-renderer,chip-shape{display:block}
+.ytChipShapeButtonReset{display:block;width:100%;padding:0;border:0;border-radius:8px;background:transparent;cursor:pointer;color:var(--yt-spec-text-primary)}
+.ytChipShapeInactive,.ytChipShapeActive{position:relative;display:flex;align-items:center;height:44px;width:100%;padding:0 14px;border-radius:8px;background:var(--native-tonal);overflow:hidden}
+.ytChipShapeActive{background:var(--native-filled);color:var(--native-filled-text)}
+#right-arrow-button button{position:relative;display:flex;justify-content:center;align-items:center;width:44px;height:44px;padding:0;border:0;border-radius:22px;background:var(--native-tonal);color:var(--yt-spec-text-primary);overflow:hidden;cursor:pointer}
+#right-arrow-button svg{width:24px;height:24px;fill:currentColor}
+ytd-masthead{display:block;padding:6px 14px 10px;max-width:860px;margin:auto;background:transparent}
+#fixture-searches{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+yt-searchbox,ytd-searchbox{display:flex;height:44px;width:100%}
+.ytSearchboxComponentInputBox,#container.ytd-searchbox{display:flex;align-items:center;flex:1;min-width:0;padding:0 12px;height:44px;border:1px solid var(--native-border);border-radius:22px 0 0 22px;background:var(--native-page)}
+input{width:100%;min-width:0;border:0;background:transparent;outline:none;padding:0}input::placeholder{color:var(--native-placeholder);opacity:1}
+.ytSearchboxComponentSearchButton,#search-icon-legacy{display:flex;align-items:center;justify-content:center;position:relative;flex:0 0 52px;height:44px;border:1px solid var(--native-border);border-left:0;border-radius:0 22px 22px 0;background:var(--native-tonal);color:var(--yt-spec-text-primary);overflow:hidden;cursor:pointer}
+.ytSearchboxComponentSearchButton svg,#search-icon-legacy svg{width:24px;height:24px;fill:currentColor}
+#fixture-enhancer{margin-top:10px}.efyt-control-bar{display:flex;position:relative;gap:0;width:max-content;height:44px;border-radius:22px;background:#181818;padding:0 14px}
+#fixture-themed-hover{margin-top:8px}#control-theme-hover{width:180px;height:44px;padding:0 16px;color:var(--yt-spec-text-primary);background:transparent;border:0;border-radius:8px}#control-theme-hover:is(:hover,:focus-visible){background:var(--hover-background,transparent)}
+.efyt-control-bar button{position:relative;display:flex;align-items:center;justify-content:center;width:40px;height:44px;background:transparent;border:0;padding:0;border-radius:0;overflow:hidden;cursor:pointer}
+.efyt-control-bar svg{width:24px;height:24px;fill:#cfcfcf}.efyt-control-bar button[aria-pressed="true"] svg{fill:#ff4081}
+#fixture-results{padding:8px 14px;color:#eee;background:#18212e;font:11px/1.3 ui-monospace,monospace}
+#fixture-control-result{display:block;max-height:72px;overflow:auto;white-space:pre-wrap}
+</style><link rel="stylesheet" href="/ambient.css"><script src="/settings-store.js"></script></head>
+<body><header id="fixture-toolbar"><h1>Shared controls: actual pixel verification</h1>
+<div id="fixture-density-row"><label for="fixture-density">操作画面の濃さ</label><input id="fixture-density" type="range" min="0" max="100" value="100"><output id="fixture-density-value">100 / 100</output></div><p id="fixture-density-help">0は完全透過、100は標準の濃さ。ボタン、検索、タグ、カード、チャット、メニューの共通設定です。</p>
+<button id="fixture-theme">Switch light/dark</button><button id="fixture-ambient">Ambient ON/OFF</button><button id="fixture-black">Black</button><button id="fixture-white">White</button><button id="fixture-color">Color</button><button id="fixture-native-off">Check native OFF</button><button id="fixture-feedback">Use opacity feedback</button><button id="fixture-fade">Check native fade tail</button><button id="fixture-capture">Capture metadata · Tab enters Tonal</button><div id="fixture-state"></div></header>
+<ytd-app><div id="yac-background"></div><ytd-watch-flexy><div id="fixture-controls">
+<div><span class="case-label">Tonal · normal / keyboard focus</span><button id="control-tonal" data-face="tonal" class="ytSpecButtonShapeNextHost ytSpecButtonShapeNextMono ytSpecButtonShapeNextTonal"><svg data-solid="13.5,15" viewBox="0 0 24 24"><path d="M8 10h12v10H8zM2 10h4v10H2zM8 10l4-8h3v8z"/></svg><span class="copy" data-ink>Share</span><yt-touch-feedback-shape><div class="ytSpecTouchFeedbackShapeFill"></div></yt-touch-feedback-shape></button></div>
+<div><span class="case-label">Filled · native white accent</span><button id="control-filled" data-face="filled" class="ytSpecButtonShapeNextHost ytSpecButtonShapeNextMono ytSpecButtonShapeNextFilled"><span class="copy" data-ink>Subscribe</span><yt-touch-feedback-shape><div class="ytSpecTouchFeedbackShapeFill"></div></yt-touch-feedback-shape></button></div>
+<div><span class="case-label">Outline</span><button id="control-outline" data-face="outline" class="ytSpecButtonShapeNextHost ytSpecButtonShapeNextMono ytSpecButtonShapeNextOutline"><span class="copy" data-ink>Save</span><yt-touch-feedback-shape><div class="ytSpecTouchFeedbackShapeFill"></div></yt-touch-feedback-shape></button></div>
+<div><span class="case-label">Text · legacy feedback class</span><button id="control-text" data-face="text" class="ytSpecButtonShapeNextHost ytSpecButtonShapeNextMono ytSpecButtonShapeNextText"><span class="copy" data-ink>Details</span><yt-touch-feedback-shape><div class="yt-spec-touch-feedback-shape__fill"></div></yt-touch-feedback-shape></button></div>
+<div><span class="case-label">Selected · pink semantic icon</span><button id="control-selected" data-face="selected" aria-pressed="true" class="ytSpecButtonShapeNextHost ytSpecButtonShapeNextMono ytSpecButtonShapeNextTonal"><svg data-solid="13.5,15" data-semantic-pink viewBox="0 0 24 24" style="fill:#ff4081"><path d="M8 10h12v10H8zM2 10h4v10H2zM8 10l4-8h3v8z"/></svg><span class="copy" data-ink>Liked</span><yt-touch-feedback-shape><div class="ytSpecTouchFeedbackShapeFill"></div></yt-touch-feedback-shape></button></div>
+<div><span class="case-label">Disabled · native opacity .38</span><button id="control-disabled" data-face="disabled" disabled class="ytSpecButtonShapeNextHost ytSpecButtonShapeNextMono ytSpecButtonShapeNextTonal"><span class="copy" data-ink>Unavailable</span><yt-touch-feedback-shape><div class="ytSpecTouchFeedbackShapeFill"></div></yt-touch-feedback-shape></button></div>
+<div><span class="case-label">Chip · normal / focus</span><yt-chip-cloud-renderer><yt-chip-cloud-chip-renderer><chip-shape><button class="ytChipShapeButtonReset"><div data-face="chip-normal" class="ytChipShapeInactive"><span data-ink>Related</span><yt-touch-feedback-shape><div class="ytSpecTouchFeedbackShapeFill"></div></yt-touch-feedback-shape></div></button></chip-shape></yt-chip-cloud-chip-renderer></yt-chip-cloud-renderer></div>
+<div><span class="case-label">Chip · selected</span><yt-chip-cloud-renderer><yt-chip-cloud-chip-renderer selected><chip-shape><button class="ytChipShapeButtonReset" aria-selected="true"><div data-face="chip-selected" class="ytChipShapeActive"><span data-ink>All</span><yt-touch-feedback-shape><div class="ytSpecTouchFeedbackShapeFill"></div></yt-touch-feedback-shape></div></button></chip-shape></yt-chip-cloud-chip-renderer></yt-chip-cloud-renderer></div>
+<div><span class="case-label">Chip arrow · native SVG</span><yt-chip-cloud-renderer><div id="right-arrow-button"><button data-face="chip-arrow" data-top-sample><svg data-solid="13.5,12" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6-1.4-1.4 4.6-4.6-4.6-4.6z"/></svg><yt-touch-feedback-shape><div class="ytSpecTouchFeedbackShapeFill"></div></yt-touch-feedback-shape></button></div></yt-chip-cloud-renderer></div>
+</div><div id="fixture-enhancer"><span class="case-label">Enhancer · original white and pink SVGs</span><div class="efyt-control-bar" data-face="enhancer" data-top-sample><button aria-label="Enhancer loop"><svg data-solid="13.5,15" viewBox="0 0 24 24"><path d="M8 10h12v10H8zM2 10h4v10H2zM8 10l4-8h3v8z"/></svg><yt-touch-feedback-shape><div class="ytSpecTouchFeedbackShapeFill"></div></yt-touch-feedback-shape></button><button aria-label="Enhancer selected filter" aria-pressed="true"><svg data-solid="13.5,15" data-semantic-pink viewBox="0 0 24 24"><path d="M8 10h12v10H8zM2 10h4v10H2zM8 10l4-8h3v8z"/></svg><yt-touch-feedback-shape><div class="ytSpecTouchFeedbackShapeFill"></div></yt-touch-feedback-shape></button><button aria-label="Enhancer options"><svg data-solid="13.5,15" viewBox="0 0 24 24"><path d="M8 10h12v10H8zM2 10h4v10H2zM8 10l4-8h3v8z"/></svg><yt-touch-feedback-shape><div class="ytSpecTouchFeedbackShapeFill"></div></yt-touch-feedback-shape></button></div></div></ytd-watch-flexy>
+<ytd-masthead><div id="fixture-searches"><div><span class="case-label">Current search · placeholder</span><yt-searchbox><div data-face="search-modern" class="ytSearchboxComponentInputBox"><input aria-label="Current search" data-ink placeholder="Search"></div><button data-face="search-modern-button" data-top-sample class="ytSearchboxComponentSearchButton" aria-label="Current search button"><svg data-solid="3.5,10" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M10 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14m0 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10m5 9 6 6-1.4 1.4-6-6z"/></svg><yt-touch-feedback-shape><div class="ytSpecTouchFeedbackShapeFill"></div></yt-touch-feedback-shape></button></yt-searchbox></div><div><span class="case-label">Legacy search · editable field</span><ytd-searchbox><div id="container" data-face="search-legacy" class="ytd-searchbox"><div id="search-input"><input aria-label="Legacy search" data-ink value="Query"></div></div><button id="search-icon-legacy" data-face="search-legacy-button" data-top-sample aria-label="Legacy search button"><svg data-solid="3.5,10" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M10 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14m0 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10m5 9 6 6-1.4 1.4-6-6z"/></svg><yt-touch-feedback-shape><div class="ytSpecTouchFeedbackShapeFill"></div></yt-touch-feedback-shape></button></ytd-searchbox></div></div></ytd-masthead></ytd-app>
+<footer id="fixture-results"><output id="fixture-control-result"></output></footer>
+<script>
+'use strict';
+const root=document.documentElement,result=document.querySelector('#fixture-control-result'),state=document.querySelector('#fixture-state');
+const themeHover=document.createElement('div');themeHover.id='fixture-themed-hover';
+const themeLabel=document.createElement('span');themeLabel.className='case-label';themeLabel.textContent='Theme hover background token';
+const themeButton=document.createElement('button');themeButton.id='control-theme-hover';themeButton.textContent='Theme hover';themeHover.append(themeLabel,themeButton);document.querySelector('ytd-watch-flexy').append(themeHover);
+const densityStyle=document.createElement('style');densityStyle.id='fixture-density-palette';document.head.append(densityStyle);
+function applyDensity(){const value=Number(document.querySelector('#fixture-density').value),palette=YacSettingsStore.surfacePalette({surfaceDensity:value});densityStyle.textContent='html.yac-active{'+Object.entries(palette).map(([key,v])=>key+':'+v).join(';')+'}';document.querySelector('#fixture-density-value').value=value+' / 100';}
+document.querySelector('#fixture-density').addEventListener('input',()=>{applyDensity();capture();});applyDensity();
+root.setAttribute('data-backdrop','white');
+const faces=[...document.querySelectorAll('[data-face]')],originalIcons=[...document.querySelectorAll('svg')],initialGeometry=new Map(faces.map(face=>[face,face.getBoundingClientRect()]));
+const transparent=value=>value==='rgba(0, 0, 0, 0)'||value==='transparent';
+const nativeSnapshot=()=>Object.fromEntries(faces.map(face=>{const css=getComputedStyle(face);return [face.dataset.face,{backgroundColor:css.backgroundColor,backdropFilter:css.backdropFilter,color:css.color,opacity:css.opacity}];}));
+const baseline={};root.classList.remove('yac-active');for(const dark of [true,false]){root.toggleAttribute('dark',dark);baseline[dark?'dark':'light']=nativeSnapshot();}root.toggleAttribute('dark',true);root.classList.add('yac-active');
+const rect=value=>({x:value.x,y:value.y,width:value.width,height:value.height});
+function capture(){
+  const dark=root.hasAttribute('dark'),active=root.classList.contains('yac-active'),failures=[];
+  const measurements=faces.map(face=>{
+    const box=face.getBoundingClientRect(),css=getComputedStyle(face),ink=face.querySelector('[data-ink]')||face.querySelector('svg')||face;
+    const interactive=face.matches('button,input')?face:face.closest('button')||[...face.querySelectorAll('button,input')].find(button=>button.matches(':focus-visible,:hover'))||face.querySelector('button,input');
+    const buttonBox=interactive?.getBoundingClientRect();
+    // Sample the current toolbar button's top padding, inside its feedback
+    // layer. The outside padding would miss that paint, and the old midpoint
+    // crossed its native focus outline. Keep the strict 9x9 image-pixel gate.
+    const point=face.dataset.face==='enhancer'?{x:buttonBox.x+buttonBox.width/2,y:buttonBox.y+5.5}:
+      face.dataset.face==='chip-arrow'?{x:box.right-11,y:box.y+box.height/2}:
+      face.dataset.face.endsWith('-button')?{x:box.x+8,y:box.y+box.height/2}:
+      {x:box.right-36,y:box.y+box.height/2};
+    // The 44px circular arrow has less blank padding than the wide faces. Keep
+    // a 10px patch clear of its SVG tip and the curved edge; the verifier still
+    // requires at least 9x9 decoded image pixels and rejects contaminated patches.
+    const sampleSide=face.dataset.face==='chip-arrow'?10:12;
+    const sampleHeight=face.dataset.face==='enhancer'?9:sampleSide;
+    const feedback=interactive?.querySelector('.ytSpecTouchFeedbackShapeFill,.yt-spec-touch-feedback-shape__fill')||face.querySelector('.ytSpecTouchFeedbackShapeFill,.yt-spec-touch-feedback-shape__fill'),feedbackCss=feedback&&getComputedStyle(feedback);
+    const inkCss=getComputedStyle(ink),placeholder=ink.matches('input')?getComputedStyle(ink,'::placeholder'):null;
+    const icons=[...face.querySelectorAll('svg[data-solid]')].map(icon=>{
+      const bounds=icon.getBoundingClientRect(),solid=icon.dataset.solid.split(',').map(Number),iconCss=getComputedStyle(icon);
+      return {rect:rect(bounds),fill:iconCss.fill,point:{x:bounds.x+bounds.width*solid[0]/24,y:bounds.y+bounds.height*solid[1]/24},semanticPink:icon.hasAttribute('data-semantic-pink')};
+    });
+    const original=initialGeometry.get(face);
+    if(Math.abs(original.width-box.width)>.01||Math.abs(original.height-box.height)>.01)failures.push(face.dataset.face+': native geometry changed');
+    const role=face.dataset.face==='disabled'?'disabled':ink.matches('svg')?'icon':'primary',usesPlaceholder=ink.matches('input')&&!ink.value;
+    return {id:face.dataset.face,role,minContrast:role==='disabled'?null:role==='icon'?3:4.5,rect:rect(box),sampleRegion:{x:point.x-sampleSide/2,y:point.y-sampleHeight/2,width:sampleSide,height:sampleHeight},computedForeground:usesPlaceholder?placeholder.color:ink.matches('svg')?inkCss.fill:inkCss.color,usesPlaceholder,placeholder:placeholder&&{color:placeholder.color,opacity:placeholder.opacity},backgroundColor:css.backgroundColor,backdropFilter:css.backdropFilter,opacity:css.opacity,focusVisible:!!interactive?.matches(':focus-visible'),focusWithin:face.matches(':focus-within'),feedback:feedbackCss&&{backgroundColor:feedbackCss.backgroundColor,opacity:feedbackCss.opacity,filter:feedbackCss.filter},icons};
+  });
+  if(!originalIcons.every(icon=>icon.isConnected&&document.querySelectorAll('svg').length===originalIcons.length))failures.push('original SVG identity/count changed');
+  if([...document.querySelectorAll('[data-semantic-pink]')].some(icon=>getComputedStyle(icon).fill!=='rgb(255, 64, 129)'))failures.push('native semantic pink fill changed');
+  if(getComputedStyle(document.querySelector('#control-disabled')).opacity!=='.38'&&getComputedStyle(document.querySelector('#control-disabled')).opacity!=='0.38')failures.push('native disabled opacity changed');
+  for(const face of faces){
+    const button=face.matches('button')?face:face.closest('button')||face.querySelector('button');
+    if(!button?.matches(':focus-visible'))continue;
+    const feedback=button.querySelector('.ytSpecTouchFeedbackShapeFill,.yt-spec-touch-feedback-shape__fill');
+    if(!feedback)continue;
+    const css=getComputedStyle(feedback),nativeOpacity=root.dataset.feedbackMode==='opacity' ? .16 : 1;
+    if(Math.abs(Number(css.opacity)-nativeOpacity)>.0001)failures.push(face.dataset.face+': native keyboard feedback opacity changed');
+    const expected=active?Number(getComputedStyle(button).getPropertyValue('--yac-control-feedback').trim()):1;
+    const multiplier=css.filter==='none'?1:Number(css.filter.match(/^opacity\(([\d.]+)\)$/)?.[1]);
+    if(!Number.isFinite(multiplier)||Math.abs(multiplier-expected)>.0001)failures.push(face.dataset.face+': keyboard feedback multiplier does not follow shade');
+  }
+  if(!active){const current=nativeSnapshot();for(const face of faces){const id=face.dataset.face;for(const key of ['backgroundColor','backdropFilter','color','opacity'])if(current[id][key]!==baseline[dark?'dark':'light'][id][key])failures.push(id+': OFF '+key+' differs from native');}}
+  const themeBox=themeButton.getBoundingClientRect(),themeCss=getComputedStyle(themeButton);
+  const themeMeasurement={id:'theme-hover',rect:rect(themeBox),sampleRegion:{x:themeBox.right-26,y:themeBox.y+16,width:12,height:12},backgroundColor:themeCss.backgroundColor,hover:themeButton.matches(':hover'),focusVisible:themeButton.matches(':focus-visible'),token:themeCss.getPropertyValue('--hover-background').trim()};
+  const data={surfaceDensity:Number(document.querySelector('#fixture-density').value),mode:dark?'dark':'light',ambientActive:active,backdrop:root.dataset.backdrop,viewport:{width:innerWidth,height:innerHeight,devicePixelRatio,scrollX,scrollY},nativeChecks:{failures,originalSvgCount:originalIcons.length,expectedSvgCount:originalIcons.length,offRestoration:!active},measurements,themeHover:themeMeasurement};
+  result.dataset.measurements=JSON.stringify(data);result.dataset.status=failures.length?'fail':'ready-for-pixels';
+  result.textContent=failures.length?'FAIL: '+failures.join('; '):`Native invariants verified (${measurements.length} faces, ${originalIcons.length} original SVGs). Pixel contrast awaits screenshot sampling.`;
+  state.textContent=`${data.mode} · ambient ${active?'ON':'OFF'} · ${data.backdrop} · focus: ${document.activeElement.id||document.activeElement.getAttribute('aria-label')||document.activeElement.localName}`;
+  return data;
+}
+document.querySelector('#fixture-theme').onclick=()=>{root.toggleAttribute('dark');capture();};
+document.querySelector('#fixture-ambient').onclick=()=>{root.classList.toggle('yac-active');capture();};
+for(const backdrop of ['black','white','color'])document.querySelector('#fixture-'+backdrop).onclick=()=>{root.setAttribute('data-backdrop',backdrop);capture();};
+document.querySelector('#fixture-native-off').onclick=()=>{root.classList.remove('yac-active');capture();};
+document.querySelector('#fixture-feedback').onclick=()=>{const opacity=root.dataset.feedbackMode!=='opacity';root.dataset.feedbackMode=opacity?'opacity':'alpha';document.querySelector('#fixture-feedback').textContent=opacity?'Use alpha feedback':'Use opacity feedback';capture();};
+// Pause an actual CSS transition mid-fade so screenshots can inspect its paint
+// after hover/focus has ended. Only fixture animation timing is controlled.
+let fadeFills=[];
+document.querySelector('#fixture-fade').onclick=async function(){
+  if(fadeFills.length){
+    for(const fill of fadeFills){fill.getAnimations().forEach(animation=>animation.cancel());fill.classList.remove('fixture-tail-running','fixture-tail-active');}
+    fadeFills=[];this.textContent='Check native fade tail';capture();return;
+  }
+  this.disabled=true;result.dataset.tailStatus='running';
+  fadeFills=['#control-tonal .ytSpecTouchFeedbackShapeFill','#control-text .yt-spec-touch-feedback-shape__fill'].map(selector=>document.querySelector(selector));
+  const nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve));
+  for(const fill of fadeFills)fill.classList.add('fixture-tail-active');
+  await nextFrame();await nextFrame();
+  const initial=fadeFills.map(fill=>Number(getComputedStyle(fill).opacity));
+  for(const fill of fadeFills){fill.classList.add('fixture-tail-running');fill.classList.remove('fixture-tail-active');}
+  const deadline=performance.now()+2000;let sampled=false;
+  while(performance.now()<deadline){
+    await nextFrame();
+    if(fadeFills.every((fill,index)=>{const opacity=Number(getComputedStyle(fill).opacity);return opacity>0&&opacity<initial[index];})){
+      fadeFills.forEach(fill=>fill.getAnimations().forEach(animation=>animation.pause()));sampled=true;break;
+    }
+  }
+  const active=root.classList.contains('yac-active'),measurements=fadeFills.map((fill,index)=>{
+    const css=getComputedStyle(fill),button=fill.closest('button'),expected=active?Number(getComputedStyle(button).getPropertyValue('--yac-control-feedback').trim()):1;
+    const multiplier=css.filter==='none'?1:Number(css.filter.match(/^opacity\(([\d.]+)\)$/)?.[1]);
+    return {className:fill.className,initialOpacity:initial[index],opacity:Number(css.opacity),filter:css.filter,multiplier,expected,hover:button.matches(':hover'),focusVisible:button.matches(':focus-visible'),paused:fill.getAnimations().some(animation=>animation.playState==='paused')};
+  });
+  const passed=sampled&&measurements.every(item=>item.paused&&item.opacity>0&&item.opacity<item.initialOpacity&&!item.hover&&!item.focusVisible&&item.multiplier===item.expected);
+  result.dataset.tailCheck=JSON.stringify({passed,sampled,measurements});result.dataset.tailStatus=passed?'pass':'fail';
+  this.disabled=false;this.textContent='Clear native fade tail';capture();
+};
+document.querySelector('#fixture-capture').onclick=capture;
+// Real Tab/pointer focus and hover refresh measurements without changing focus.
+document.addEventListener('focusin',()=>requestAnimationFrame(capture));document.addEventListener('focusout',()=>requestAnimationFrame(capture));
+document.addEventListener('pointerover',()=>requestAnimationFrame(capture));document.addEventListener('pointerout',()=>requestAnimationFrame(capture));
+addEventListener('resize',capture);addEventListener('scroll',capture,{passive:true});
+capture();
+</script></body></html>

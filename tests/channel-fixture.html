@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="ja" dark data-liquid-design-stage><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>チャンネルカードの動作確認</title>
+<style>html,body{margin:0;font:15px/1.6 system-ui;color:#ececf1;background:linear-gradient(135deg,#17354c,#382843);min-height:100vh}main{max-width:900px;margin:40px auto;padding:24px}ytd-comment-view-model{display:block;margin:16px 0;padding:16px;border-radius:16px;background:#ffffff08}a{color:inherit}iframe{width:300px;height:220px;border:0;border-radius:16px}button{padding:10px}#results{white-space:pre-wrap}</style></head><body>
+<main><h1>チャンネルカード</h1><button id="light">ライトモードを切り替える</button><button id="slow">遅い応答を試す</button><button id="failure">取得失敗を試す</button>
+<ytd-comment-view-model><a id="author-text" href="https://www.youtube.com/@fixture-a">@fixture-a</a><p>名前を押してカードを確認できます。</p><a href="https://www.youtube.com/watch?v=abcdefghijk">コメント本文の動画リンク</a></ytd-comment-view-model>
+<ytd-comment-replies-renderer><ytd-comment-view-model><a id="author-text" href="https://www.youtube.com/@fixture-b">@fixture-b</a><p>返信からも同じカードを開きます。</p></ytd-comment-view-model></ytd-comment-replies-renderer>
+<ytd-comment-view-model><a id="author-text" hidden href="https://www.youtube.com/@creator">@creator</a><span id="author-comment-badge"><a href="https://www.youtube.com/@creator">@creator · 投稿者</a></span><p>投稿者のバッジ付きの名前にも対応します。</p></ytd-comment-view-model>
+<ytd-live-chat-frame><iframe src="/chat-demo" title="動作確認用のライブチャット"></iframe></ytd-live-chat-frame><p id="results">検証中</p></main>
+<script src="/lucide-icons.js"></script><script src="/quick-panel.js"></script><script src="/channel-card.js"></script><script src="/channel-fixture.js"></script></body></html>

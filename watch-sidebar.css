@@ -1,0 +1,386 @@
+/* One list card. Its native filters form the pinned header. */
+ytd-watch-flexy #secondary[data-liquid-sidebar] {
+  padding: 0 !important;
+  border-radius: 14px;
+  background: var(--yac-reading-surface, color-mix(in srgb, var(--yt-spec-text-primary, #eee) 4%, transparent));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--yt-spec-text-primary, #eee) 8%, transparent);
+}
+ytd-watch-flexy #secondary[data-liquid-sidebar] > .liquid-watch-sidebar {
+  display: block;
+  margin: 0;
+  color: var(--yt-spec-text-primary, inherit);
+  background: transparent;
+  border-radius: 14px 14px 0 0;
+  font: 13px/1.4 Roboto, Arial, sans-serif;
+}
+.liquid-watch-sidebar .liquid-sidebar-tabs {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  gap: 4px;
+  padding: 6px;
+  border-radius: 14px 14px 0 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--yt-spec-text-primary, #eee) 8%, transparent);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none !important;
+}
+.liquid-sidebar-tabs::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+.liquid-watch-sidebar button {
+  appearance: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.liquid-sidebar-tabs button {
+  flex: 0 0 auto;
+  min-width: 0;
+  height: 32px;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--yt-spec-text-secondary, #aaa);
+  font-weight: 500;
+  padding: 0 8px;
+  white-space: nowrap;
+}
+.liquid-sidebar-tabs button[data-liquid-special-tab] {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-right: 6px;
+  box-shadow: inset 0 0 0 1px #ffffff12;
+  position: relative;
+}
+.liquid-sidebar-tabs button[data-liquid-special-tab]::after {
+  content: "";
+  position: absolute;
+  right: -6px;
+  height: 16px;
+  width: 1px;
+  background: #ffffff24;
+}
+.liquid-sidebar-tabs button[data-liquid-special-tab] svg { width: 16px; height: 16px; flex: none; }
+.liquid-sidebar-tabs button[data-liquid-special-tab] span { overflow: hidden; text-overflow: ellipsis; }
+.liquid-sidebar-tabs button[aria-selected="true"] {
+  color: var(--yt-spec-text-primary, #eee);
+  background: rgba(128,128,128,.20);
+  background: color-mix(in srgb, var(--yt-spec-text-primary, #eee) 12%, transparent);
+}
+.liquid-watch-sidebar button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.liquid-watch-sidebar [hidden] { display: none !important; }
+.liquid-sidebar-notice { padding: 12px 0 0; color: var(--yt-spec-text-secondary, #aaa); }
+.liquid-sidebar-notice p { margin: 0 0 8px; }
+.liquid-sidebar-notice button { padding: 6px 10px; border-radius: 8px; background: rgba(128,128,128,.15); }
+.liquid-sidebar-placeholder { display: grid;grid-template-columns: min(38%,168px) 1fr;gap: 10px;margin-bottom: 12px; }
+.liquid-sidebar-placeholder-image { display: block;aspect-ratio: 16/9;border-radius: 10px;background: rgba(128,128,128,.16); }
+.liquid-sidebar-placeholder-lines { display: flex;flex-direction: column;gap: 8px;padding-top: 4px; }
+.liquid-sidebar-placeholder-lines span { display: block;height: 11px;border-radius: 4px;background: rgba(128,128,128,.16); }
+.liquid-sidebar-placeholder-lines span:nth-child(2) { width: 78%; }
+.liquid-sidebar-placeholder-lines span:nth-child(3) { width: 46%;height: 8px;margin-top: 2px; }
+ytd-watch-flexy #secondary[data-liquid-sidebar]:not([data-liquid-sidebar="playlist"]) ytd-playlist-panel-renderer,
+ytd-watch-flexy #secondary[data-liquid-sidebar="playlist"] #related,
+ytd-watch-flexy #secondary[data-liquid-related]:not([data-liquid-related="ready"]) #related,
+ytd-watch-flexy #secondary[data-liquid-sidebar] #related yt-related-chip-cloud-renderer,
+ytd-watch-flexy #secondary[data-liquid-sidebar] #related yt-chip-cloud-renderer {
+  display: none !important;
+}
+ytd-watch-flexy #secondary[data-liquid-sidebar] #related,
+ytd-watch-flexy #secondary[data-liquid-sidebar] #secondary-inner,
+ytd-watch-flexy #secondary[data-liquid-sidebar] ytd-playlist-panel-renderer {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+ytd-watch-flexy #secondary[data-liquid-sidebar] #related yt-lockup-view-model,
+ytd-watch-flexy #secondary[data-liquid-sidebar] #related ytd-compact-video-renderer {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+/* Add space only between cards, leaving the list's outer edges flush. */
+ytd-watch-flexy #secondary[data-liquid-sidebar] #related :is(yt-lockup-view-model, ytd-compact-video-renderer) + :is(yt-lockup-view-model, ytd-compact-video-renderer) {
+  margin-top: 8px !important;
+}
+ytd-watch-flexy #secondary[data-liquid-sidebar] ytd-playlist-panel-video-renderer + ytd-playlist-panel-video-renderer {
+  margin-top: 6px !important;
+}
+ytd-watch-flexy #secondary[data-liquid-sidebar] #related .ytLockupViewModelHorizontal { gap: 10px !important; }
+ytd-watch-flexy #secondary[data-liquid-sidebar] #related .ytLockupViewModelContentImage {
+  width: 38% !important;
+  min-width: 0 !important;
+  max-width: 168px !important;
+  flex-shrink: 0;
+}
+ytd-watch-flexy #secondary[data-liquid-sidebar] #related .ytThumbnailViewModelHost { border-radius: 10px; }
+ytd-watch-flexy #secondary[data-liquid-sidebar] #related .ytLockupMetadataViewModelTitle {
+  font-size: 14px !important;
+  line-height: 19px !important;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+ytd-watch-flexy #secondary[data-liquid-sidebar] #related .ytContentMetadataViewModelMetadataText {
+  font-size: 12px !important;
+  line-height: 17px !important;
+}
+ytd-watch-flexy #secondary[data-liquid-sidebar] #related ytd-compact-video-renderer ytd-thumbnail {
+  width: 38% !important;max-width: 168px !important;
+}
+/* Recommendations scroll independently in the standard two-column watch too.
+   Keep the document as the main scroller; no native nodes are reparented. */
+ytd-watch-flexy #columns[data-liquid-scroll-columns] { column-gap: 12px; align-items: flex-start; }
+ytd-watch-flexy #primary[data-liquid-main-column] { margin-left: 12px !important; padding-right: 0 !important; }
+ytd-watch-flexy #secondary[data-liquid-scroll-column] {
+  position: sticky !important;
+  top: var(--liquid-scroll-top) !important;
+  align-self: flex-start;
+  box-sizing: border-box;
+  padding: 0 !important;
+  margin: 12px 12px 0 0 !important;
+  max-height: calc(100dvh - var(--liquid-scroll-top));
+  overflow-x: hidden;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+ytd-watch-flexy #secondary[data-liquid-scroll-column] > .liquid-watch-sidebar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  border-radius: 14px 14px 0 0;
+}
+html[data-liquid-hide-main-scrollbar],html[data-liquid-hide-main-scrollbar] body { scrollbar-width: none !important; }
+html[data-liquid-hide-main-scrollbar]::-webkit-scrollbar,html[data-liquid-hide-main-scrollbar] body::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+ytd-watch-flexy #secondary[data-liquid-hide-list-scrollbar],
+ytd-watch-flexy #secondary[data-liquid-hide-list-scrollbar] ytd-playlist-panel-renderer #items { scrollbar-width: none !important; }
+ytd-watch-flexy #secondary[data-liquid-hide-list-scrollbar]::-webkit-scrollbar,
+ytd-watch-flexy #secondary[data-liquid-hide-list-scrollbar] ytd-playlist-panel-renderer #items::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+/* Reserve a chat column using outer whitespace; never shrink the native video.
+   Both side columns remain on screen while the central document scrolls. */
+ytd-watch-flexy #columns[data-liquid-wide-columns] {
+  display: grid !important;
+  grid-template-columns: var(--liquid-wide-side) minmax(0, 1fr) var(--liquid-wide-side);
+  column-gap: 12px;
+  width: calc(100% - 24px) !important;
+  max-width: none !important;
+  margin-inline: 12px !important;
+  align-items: start;
+  justify-content: center;
+}
+ytd-watch-flexy #columns > [data-liquid-video-column] {
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0 !important;
+  padding: 12px 0 0 !important;
+  max-width: none !important;
+  min-width: 0;
+  width: auto !important;
+}
+ytd-watch-flexy #secondary[data-liquid-parallel] {
+  grid-column: 3;
+  grid-row: 1;
+  position: sticky !important;
+  top: var(--liquid-wide-top) !important;
+  width: var(--liquid-wide-side) !important;
+  box-sizing: border-box;
+  padding: 0 !important;
+  margin: 12px 0 0 !important;
+  max-height: calc(100dvh - var(--liquid-wide-top));
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+ytd-watch-flexy #secondary[data-liquid-parallel] > .liquid-watch-sidebar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  border-radius: 14px 14px 0 0;
+}
+ytd-watch-flexy #secondary[data-liquid-parallel] [data-liquid-chat-column] {
+  position: fixed !important;
+  left: var(--liquid-chat-left) !important;
+  top: calc(var(--liquid-wide-top) + var(--liquid-left-tabs-height, 0px)) !important;
+  width: var(--liquid-wide-side) !important;
+  height: calc(100dvh - var(--liquid-wide-top) - var(--liquid-left-tabs-height, 0px) - 12px) !important;
+  margin: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden;
+  z-index: 1;
+}
+ytd-watch-flexy #secondary[data-liquid-parallel] ytd-live-chat-frame { width: 100% !important; max-width: 100%; }
+ytd-watch-flexy #secondary[data-liquid-parallel] ytd-live-chat-frame:not([data-liquid-chat-column]) { height: 100% !important; }
+ytd-watch-flexy #secondary[data-liquid-parallel] ytd-live-chat-frame iframe { width: 100%; height: 100% !important; }
+ytd-watch-flexy #secondary[data-liquid-parallel] ytd-live-chat-frame:has(#show-hide-button:not([hidden])) iframe { height: calc(100% - 44px) !important; }
+/* The card opens its original YouTube menu on right-click or Shift+F10.
+ * Hide only managed recommendation/playlist menu triggers, never player UI. */
+[data-liquid-card-menu-trigger] {
+  display: none !important;
+}
+[data-liquid-card-menu-trigger][data-liquid-context-menu-anchor] {
+  display: block !important;
+  position: fixed !important;
+  inset: auto !important;
+  left: var(--liquid-context-x) !important;
+  top: var(--liquid-context-y) !important;
+  width: 40px !important;
+  height: 40px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  z-index: -1 !important;
+}
+[data-liquid-card-menu-layout].ytLockupMetadataViewModelMoveLockupOverflowMenuToBottomRight {
+  padding-bottom: 0 !important;
+}
+[data-liquid-comment-hover] { position: relative; isolation: isolate; }
+[data-liquid-comment-hover]::before,
+[data-liquid-comment-hover]::after {
+  content: "";
+  position: absolute;
+  inset: -4px -8px;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 12px;
+  opacity: 0;
+  transition: opacity 120ms ease-out;
+}
+[data-liquid-comment-hover]::before { background: #ffffff03; }
+/* Reuse the cached avatar as a small repeated texture. Blur mixes its colors
+   without reading cross-origin pixels or sampling on every video frame. */
+[data-liquid-comment-hover]::after {
+  background-image: var(--liquid-comment-avatar);
+  background-size: 24px 24px;
+  filter: blur(12px) saturate(.85);
+  clip-path: inset(0 round 12px);
+}
+[data-liquid-comment-hover]:hover::before { opacity: 1; }
+[data-liquid-comment-hover]:hover::after { opacity: .055; }
+@media (prefers-reduced-motion: reduce) {
+  [data-liquid-comment-hover]::before, [data-liquid-comment-hover]::after { transition: none; }
+}
+html[data-liquid-header] ytd-masthead,
+html[data-liquid-header] ytd-masthead #background {
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+html[data-liquid-header] ytd-masthead { isolation: isolate; }
+html[data-liquid-header] ytd-masthead::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 -48px;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(180deg, #0b0b10c2 0%, #0b0b10a6 42%, #0b0b1000 100%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 32%, #000a 58%, #0000 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 32%, #000a 58%, #0000 100%);
+  opacity: 0;
+  transition: opacity 140ms ease-out;
+}
+html[data-liquid-header-scrolled] ytd-masthead::before {
+  opacity: 1;
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
+html[data-liquid-header-scrolled] ytd-masthead {
+  --yt-spec-text-primary: #f1f1f4;
+  --yt-spec-text-secondary: #b1b1ba;
+  --yt-spec-icon-active: #f1f1f4;
+  --yt-spec-icon-inactive: #b1b1ba;
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-liquid-header] ytd-masthead::before { transition: none; }
+}
+
+/* Native non-list panels stay in their original DOM, but occupy the left side. */
+ytd-watch-flexy #secondary:has(#panels[data-liquid-left-panels], [data-liquid-left-overlay]) {
+  /* The sticky sidebar is a stacking context. Raise that context over
+     Enhancer's player (301), while remaining below the masthead (2020). */
+  z-index: 302 !important;
+}
+ytd-watch-flexy #secondary:not([data-liquid-scroll-column]):not([data-liquid-parallel]):has(#panels[data-liquid-left-panels], [data-liquid-left-overlay]) {
+  /* Theater mode has no sticky list, but still needs a positioned context. */
+  position: relative !important;
+}
+ytd-watch-flexy #secondary #panels[data-liquid-left-panels],
+ytd-watch-flexy #secondary [data-liquid-chat-column][data-liquid-left-overlay] {
+  position: fixed !important;
+  left: var(--liquid-chat-left) !important;
+  top: calc(var(--liquid-wide-top) + var(--liquid-left-tabs-height, 0px)) !important;
+  width: var(--liquid-wide-side) !important;
+  height: calc(100dvh - var(--liquid-wide-top) - var(--liquid-left-tabs-height, 0px) - 12px) !important;
+  box-sizing: border-box;
+  margin: 0 !important;
+  overflow: hidden;
+  z-index: 4;
+  border-radius: 14px;
+}
+ytd-watch-flexy #secondary #panels[data-liquid-left-panels] > ytd-engagement-panel-section-list-renderer[visibility="ENGAGEMENT_PANEL_VISIBILITY_EXPANDED"] {
+  height: 100% !important;
+  max-height: none !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+}
+ytd-watch-flexy #secondary #panels[data-liquid-left-panels] #content { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+ytd-watch-flexy #secondary [data-liquid-left-hidden] { visibility: hidden !important; pointer-events: none !important; }
+ytd-watch-flexy #secondary [data-liquid-chat-column][data-liquid-left-overlay] ytd-live-chat-frame,
+ytd-watch-flexy #secondary [data-liquid-chat-column][data-liquid-left-overlay] iframe { width: 100% !important; height: 100% !important; }
+.liquid-left-panel-tabs {
+  position: fixed;
+  left: var(--liquid-chat-left);
+  top: var(--liquid-wide-top);
+  width: var(--liquid-wide-side);
+  height: 40px;
+  box-sizing: border-box;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 12px 12px 0 0;
+  isolation: isolate;
+  background: transparent;
+  color: var(--yt-spec-text-primary, inherit);
+  font: 13px/1.4 Roboto, Arial, sans-serif;
+  z-index: 5;
+}
+.liquid-left-panel-tabs button { appearance: none; border: 0; flex: 1; min-width: 0; border-radius: 8px; background: transparent; color: var(--yt-spec-text-secondary, inherit); font: inherit; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+.liquid-left-panel-tabs button[aria-selected="true"] { color: var(--yt-spec-text-primary, inherit); background: color-mix(in srgb, currentColor 12%, transparent); }
+.liquid-left-panel-tabs button:focus-visible { outline: 2px solid currentColor; outline-offset: -2px; }
+
+/* The pinned list and panel headers are clear at the top of their own
+   scrollers. A light black tint appears only while content passes underneath. */
+ytd-watch-flexy #secondary[data-liquid-scroll-column] #related :is(yt-related-chip-cloud-renderer, yt-chip-cloud-renderer) {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  isolation: isolate;
+  background: transparent !important;
+  backdrop-filter: none !important;
+}
+.liquid-sidebar-tabs::before,
+.liquid-left-panel-tabs::before,
+ytd-watch-flexy #secondary[data-liquid-scroll-column] #related :is(yt-related-chip-cloud-renderer, yt-chip-cloud-renderer)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(180deg, #0000003d 0%, #00000029 60%, #00000000 100%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 45%, #0000 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 45%, #0000 100%);
+  opacity: 0;
+  transition: opacity 140ms ease-out;
+}
+#secondary[data-liquid-list-scrolled] .liquid-sidebar-tabs::before,
+#secondary[data-liquid-left-scrolled] .liquid-left-panel-tabs::before,
+ytd-watch-flexy #secondary[data-liquid-list-scrolled][data-liquid-scroll-column] #related :is(yt-related-chip-cloud-renderer, yt-chip-cloud-renderer)::before {
+  opacity: 1;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .liquid-sidebar-tabs::before, .liquid-left-panel-tabs::before,
+  ytd-watch-flexy #secondary[data-liquid-scroll-column] #related :is(yt-related-chip-cloud-renderer, yt-chip-cloud-renderer)::before { transition: none; }
+}

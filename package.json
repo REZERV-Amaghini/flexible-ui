@@ -1,0 +1,44 @@
+{
+  "name": "flexible-ui",
+  "version": "3.1.3",
+  "private": true,
+  "description": "Flexible UI browser extension for YouTube, playback and site appearance",
+  "license": "MIT",
+  "scripts": {
+    "check": "node --check color-picker.js && node --check tests/check-color-picker.cjs && node --check choice-menu.js && node --check tests/check-choice-menu.cjs && node --check lucide-icons.js && node --check settings-store.js && node --check black-bar-detector.js && node --check renderer.js && node --check flash-monitor.js && node --check worker-client.js && node --check worker-host.js && node --check ambient-worker.js && node --check ambient.js && node --check tests/server.cjs && node --check tests/check-black-bars.cjs && node --check tests/check-worker.cjs && node --check tests/check-flash-monitor.cjs && node --check tests/check-renderer.js && node --check tests/check-projection.cjs && node --check tests/check-settings.cjs && node --check tests/check-ambient.cjs && node --check tests/check-surfaces.cjs && node --check tests/check-frame-pacing.cjs && node --check gpu-renderer.js && node --check tests/check-gpu.cjs && node --check tests/check-gpu-browser.js && node --check tests/check-scroll-blur.cjs && node --check tests/warning-fixture.js && node --check scripts/native-preview.cjs && node --check playback-card.js && node --check quick-panel.js && node --check tests/check-quick-panel.cjs && node --check tests/check-playback-card.cjs && node --check site-registry.js && node --check settings-backup.js && node --check tests/check-settings-backup.cjs && node --check settings-dialog.js && node --check extension-background.js && node --check settings-page.js && node --check tests/check-platform.cjs && node --check tests/settings-fixture.js && node --check media-controller.js && node --check tests/check-media.cjs && node --check tests/media-fixture.js && node --check site-appearance.js && node --check tests/check-appearance.cjs && node --check tests/appearance-fixture.js && node --check tests/appearance-profile.js && node --check tests/check-global-playback.cjs && node --check tests/media-profile.js && node --check watch-sidebar.js && node --check tests/check-watch-sidebar.cjs && node --check channel-card.js && node --check channel-bridge.js && node --check tests/check-channel-card.cjs",
+    "test": "npm run test:colors && npm run test:choices && npm run test:bars && npm run test:projection && npm run test:worker && npm run test:flash && npm run test:settings && npm run test:ambient && npm run test:surfaces && npm run test:pacing && npm run test:gpu && npm run test:scroll-blur && npm run test:platform && npm run test:backup && npm run test:media && npm run test:appearance && npm run test:global-playback && npm run test:playback-card && npm run test:quick-panel && npm run test:design-stage && npm run test:sidebar && npm run test:channel",
+    "test:gpu": "node tests/check-gpu.cjs",
+    "test:scroll-blur": "node tests/check-scroll-blur.cjs",
+    "test:settings": "node tests/check-settings.cjs",
+    "test:ambient": "node tests/check-ambient.cjs",
+    "test:surfaces": "node tests/check-surfaces.cjs",
+    "test:pacing": "node tests/check-frame-pacing.cjs",
+    "test:projection": "node tests/check-projection.cjs",
+    "test:flash": "node tests/check-flash-monitor.cjs",
+    "test:bars": "node tests/check-black-bars.cjs",
+    "test:worker": "node tests/check-worker.cjs",
+    "check:design": "node --check tests/card-menu-preview.js && node --check tests/design-settings-bridge.js && node --check tests/settings-designs.js && node --check tests/playback-designs.js && node --check tests/design-stage.js && node --check tests/native-design-stage.cjs && node --check tests/check-design-stage.cjs",
+    "test:design-stage": "node tests/check-design-stage.cjs && node tests/check-design-media.cjs",
+    "demo": "node tests/server.cjs",
+    "demo:native": "node scripts/native-preview.cjs",
+    "build": "python scripts/build.py",
+    "test:colors": "node tests/check-color-picker.cjs",
+    "test:backup": "node tests/check-settings-backup.cjs",
+    "test:platform": "node tests/check-platform.cjs",
+    "test:media": "node tests/check-media.cjs",
+    "test:appearance": "node tests/check-appearance.cjs",
+    "test:quick-panel": "node tests/check-quick-panel.cjs",
+    "test:playback-card": "node tests/check-playback-card.cjs",
+    "test:global-playback": "node tests/check-global-playback.cjs",
+    "test:choices": "node tests/check-choice-menu.cjs",
+    "test:sidebar": "node tests/check-watch-sidebar.cjs",
+    "test:channel": "node tests/check-channel-card.cjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/REZERV-Amaghini/flexible-ui.git"
+  }
+}

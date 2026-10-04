@@ -1,0 +1,25 @@
+<!doctype html>
+<html dark><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Native warning dialog fixture</title>
+<style>
+html,body{margin:0;background:#0f0f0f;color:#eee;font:14px/1.4 system-ui}*{box-sizing:border-box}
+#fixture-header,#fixture-report{padding:10px 16px;background:#18212e;position:relative;z-index:5}h1{font-size:16px;margin:0 0 5px}p{margin:3px 0;font-size:12px}
+ytd-app,ytd-masthead,ytd-watch-flexy{display:block}ytd-app{min-height:calc(100vh - 100px);background:#0f0f0f}ytd-masthead{padding:6px 16px;background:#222}
+#columns{padding:12px 16px;max-width:850px;margin:auto}#movie_player{position:relative;width:100%;aspect-ratio:16/9;min-height:320px;background:#000;overflow:hidden}
+.html5-video-container{position:absolute;inset:0}.html5-main-video{width:100%;height:100%;object-fit:contain}
+#fixture-player-controls{position:absolute;top:8px;left:8px;right:8px;z-index:75;display:flex;gap:5px;flex-wrap:wrap}
+button{font:12px system-ui;color:#eee;background:#283548;border:1px solid #ffffff40;border-radius:6px;padding:7px 10px;cursor:pointer}
+.ytp-chrome-bottom{position:absolute;left:8px;right:8px;bottom:0;height:44px;z-index:60;background:#0006}.ytp-right-controls{display:flex;justify-content:flex-end;height:40px}
+.ytp-button{display:inline-flex;justify-content:center;align-items:center;width:48px;height:40px;padding:0;border:0;background:transparent;color:#eee;font-size:20px}
+#below{padding-top:8px}.fixture-note{font-size:12px;background:#18212e;color:#eee;padding:6px}
+#fixture-result{display:block;font:12px/1.4 ui-monospace,monospace;white-space:pre-wrap}#movie_player:fullscreen{width:100vw;height:100vh;aspect-ratio:auto}
+</style><link rel="stylesheet" href="/ambient.css"></head><body>
+<header id="fixture-header"><h1>Actual controller → native warning dialog</h1><p>The visible local video stays constant. Only an armed monitor call receives synthetic numerical pixels and clocks. This checks controller/modal behavior; it does not measure real-video detection accuracy or timing.</p><button id="fixture-outside-probe">Outside interaction probe</button><span id="fixture-outside-count"> clicks: 0</span></header>
+<ytd-app><ytd-masthead>Local static source · isolated Worker remains enabled</ytd-masthead><ytd-watch-flexy><div id="columns"><div id="primary"><div id="primary-inner">
+<div id="movie_player"><div class="html5-video-container"><video class="html5-main-video" autoplay muted playsinline></video></div>
+<div id="fixture-player-controls"><button id="fixture-arm">Arm numerical warning</button><button id="fixture-disarm">Disarm</button><button id="fixture-fullscreen">Native fullscreen</button><button id="fixture-nav-reset">Same-source navigation</button><button id="fixture-next-source">Next source + arm</button><button id="fixture-fail-write">Fail next setting write</button><button id="fixture-delay-write">Delay next setting write</button><button id="fixture-reset-events">Reset event counters</button><button id="fixture-inspect">Inspect metadata</button><label>Opener after warning opens <select id="fixture-opener-state"><option value="usable">Usable</option><option value="disabled">Disabled</option><option value="hidden">Hidden</option></select></label><button id="fixture-restore-opener">Restore opener</button></div>
+<div class="ytp-chrome-bottom"><div class="ytp-right-controls"><button class="ytp-settings-button ytp-button" aria-label="設定" aria-expanded="false">⚙</button></div></div></div>
+<div id="below"><div class="fixture-note">Warnings run only above 50% strength. Close/Escape suppress this source; successful reduction allows monitoring when strength returns above 50%. “Next source” changes only the public video query and dispatches YouTube's navigation event.</div></div>
+</div></div></div></ytd-watch-flexy></ytd-app>
+<footer id="fixture-report"><output id="fixture-result">Loading real runtime…</output></footer>
+<script src="/black-bar-detector.js"></script><script src="/renderer.js"></script><script src="/flash-monitor.js"></script><script src="/worker-client.js"></script><script src="/settings-store.js"></script><script src="/lucide-icons.js"></script><script src="/warning-fixture.js"></script>
+</body></html>

@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Flexible UI — playback verification</title></head>
+<body style="font:16px/1.5 system-ui;background:#e6e8ef;color:#20242c;padding:32px">
+  <h1>再生速度とRATEの確認</h1><p>端末内で作る440Hzのテスト音源です。通常は音を出しません。</p>
+  <button id="fixture-action">拡張機能アイコンから開く</button><button id="fixture-youtube">YouTubeの設定を開く</button>
+  <button id="fixture-home">ページ内を移動</button><button id="fixture-inspect">設定の保存を確認</button>
+  <p><button id="media-start">無音で再生</button><button id="media-replace">プレイヤーを入れ替える</button>
+    <button id="media-observe">実際の速度と音程補正を確認</button><button id="media-spectrum">出力の周波数を測定</button></p>
+  <div id="movie_player"><video id="fixture-media" controls muted style="width:320px;height:80px"></video></div><pre id="media-result"></pre><pre id="fixture-result"></pre>
+  <script src="/settings-fixture.js"></script><script src="/settings-store.js"></script><script src="/lucide-icons.js"></script>
+  <script src="/site-registry.js"></script><script src="/media-profile.js"></script><script src="/playback-card.js"></script><script src="/choice-menu.js"></script><script src="/color-picker.js"></script><script src="/quick-panel.js"></script><script src="/settings-backup.js"></script><script src="/settings-dialog.js"></script><script src="/media-controller.js"></script><script src="/media-fixture.js"></script>
+</body></html>

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Flexible UI — site appearance verification</title><link rel="stylesheet" href="/appearance-fixture.css"></head>
+<body>
+<div class="fixture-controls"><button id="fixture-action">すべての設定</button><button id="fixture-site">このサイトの設定</button>
+<button id="fixture-theme">サイトの明暗を切替</button><button id="fixture-add">項目を追加</button><button id="fixture-inspect">寸法を確認</button>
+<span>テスト用画面 · <a href="/appearance-check?site=youtube-music">Music</a> / <a href="/appearance-check?site=x">X</a></span></div>
+<section id="music-fixture">
+<ytmusic-app><ytmusic-nav-bar data-measure="music-header"><strong>Music</strong><ytmusic-search-box data-measure="music-search"><div id="search-background">検索</div></ytmusic-search-box></ytmusic-nav-bar>
+<div class="music-layout"><ytmusic-guide-renderer data-measure="music-guide">ホーム<br>探索<br>ライブラリ</ytmusic-guide-renderer>
+<main><div class="cover">Liquid<br><small>site appearance preview</small></div><h1 data-measure="music-title">YouTube Musicの外観</h1><p>操作部分と読む部分の濃さを別々に調整します。</p>
+<ytmusic-player-queue data-measure="music-queue"><h2>次の曲</h2><div class="queue-items"><p>01 — First track</p><p>02 — Next track</p></div></ytmusic-player-queue>
+<ytmusic-tab-renderer page-type="MUSIC_PAGE_TYPE_TRACK_LYRICS" data-measure="music-lyrics"><ytmusic-description-shelf-renderer page-type="MUSIC_PAGE_TYPE_TRACK_LYRICS" data-measure="music-lyrics-content"><h2>歌詞</h2><p>テスト用の歌詞表示です。文字サイズと配置は維持します。</p></ytmusic-description-shelf-renderer></ytmusic-tab-renderer>
+<ytmusic-description-shelf-renderer data-measure="music-biography"><h2>アーティストの紹介</h2><p>歌詞以外の紹介文はこの設定の対象外です。</p></ytmusic-description-shelf-renderer></main></div>
+<ytmusic-player-bar data-measure="music-player">▶　　Liquid preview　　　0:00 / 3:00</ytmusic-player-bar></ytmusic-app></section>
+<section id="x-fixture"><div class="x-layout"><header role="banner"><nav data-measure="x-nav"><strong>X</strong><p>ホーム</p><p>話題を検索</p><p>通知</p><p>メッセージ</p></nav></header>
+<main data-testid="primaryColumn"><div role="tablist" data-measure="x-tabs"><span>おすすめ</span><span>フォロー中</span></div>
+<div id="post-list"><article data-testid="tweet" data-measure="x-post"><strong>Liquid preview</strong><p>投稿の背景だけを調整します。余白と文字サイズは元のままです。</p><footer>♡　　　↗</footer></article>
+<article data-testid="tweet" data-measure="x-post-2"><strong>Site profiles</strong><p>YouTubeとMusicとXは、それぞれ別の設定を保存します。</p><footer>♡　　　↗</footer></article></div></main></div></section>
+<pre id="fixture-result" aria-live="polite"></pre>
+<script src="/appearance-fixture.js"></script><script src="/settings-store.js"></script><script src="/lucide-icons.js"></script>
+<script src="/site-registry.js"></script><script src="/appearance-profile.js"></script><script src="/playback-card.js"></script><script src="/choice-menu.js"></script><script src="/color-picker.js"></script><script src="/quick-panel.js"></script><script src="/settings-backup.js"></script><script src="/settings-dialog.js"></script>
+<script src="/media-controller.js"></script><script src="/site-appearance.js"></script>
+</body></html>

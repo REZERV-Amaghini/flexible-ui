@@ -1,0 +1,15 @@
+<!doctype html><html><meta charset="utf-8"><title>Renderer check</title>
+<style>body{background:#121315;color:white;font:22px monospace;padding:24px}pre{white-space:pre-wrap}</style>
+<h1 id="result">Running renderer checks…</h1><pre id="details"></pre>
+<script src="/black-bar-detector.js"></script>
+<script src="/renderer.js"></script>
+<script src="/check-renderer.js"></script>
+<script>
+try {
+  const result=globalThis.yacTestResult;
+  document.querySelector('#result').textContent=result.pass?'PASS — all renderer checks':'FAIL';
+  document.querySelector('#details').textContent=JSON.stringify(result,null,2);
+  document.documentElement.dataset.pass=String(result.pass);
+  fetch('/test-result',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(result)});
+} catch(error) { document.querySelector('#result').textContent='ERROR: '+error.message; }
+</script></html>

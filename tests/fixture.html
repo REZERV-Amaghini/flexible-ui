@@ -1,0 +1,1081 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Ambient verification</title>
+<script>
+const fixtureParameters=new URLSearchParams(location.search);
+document.documentElement.toggleAttribute('dark',!fixtureParameters.has('light'));
+document.documentElement.toggleAttribute('data-compact-player',fixtureParameters.has('compact'));
+</script>
+<style>
+html,body{margin:0;color:white;background:#0f0f0f;font:14px system-ui}html{--fixture-popup-base:#282828;--fixture-control-base:#303030;--fixture-control-text:#fff}ytd-app{display:block;background:#222;min-height:220vh}ytd-masthead{display:block;position:sticky;top:0;z-index:100;height:56px;background:#222;padding-left:24px;line-height:56px}
+ytd-masthead{display:flex;align-items:center;gap:16px;padding-right:24px}ytd-masthead>#background{flex:1;min-width:0}ytd-masthead>#end{display:flex;align-items:center;flex-shrink:0;line-height:normal}ytd-masthead>#end>#buttons{display:flex;align-items:center}#buttons>:is(ytd-button-renderer,ytd-notification-topbar-button-renderer,ytd-topbar-menu-button-renderer){display:flex;align-items:center;height:40px}#buttons>ytd-button-renderer{width:90px;margin-right:8px}#buttons>ytd-notification-topbar-button-renderer{width:40px;margin-right:8px}#buttons>ytd-topbar-menu-button-renderer{width:40px}#buttons .fixture-native-topbar-button{display:inline-flex;align-items:center;justify-content:center;gap:6px;width:100%;height:40px;padding:0;border-radius:20px;font:14px system-ui;background:transparent;color:inherit}#buttons>ytd-button-renderer .fixture-native-topbar-button{background:var(--fixture-control-base)}#buttons .fixture-native-topbar-button svg{width:24px;height:24px;fill:currentColor}#buttons .fixture-avatar{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#53698a;color:white;font-weight:600}
+#columns{display:flex;gap:24px;padding:24px;max-width:1200px;margin:auto;background:#222}#primary{flex:1;min-width:0}#secondary{width:250px;background:#222}
+#movie_player{position:relative;aspect-ratio:16/9;background:#000;overflow:hidden}.html5-video-container{position:absolute;inset:0}video{width:100%;height:100%;object-fit:contain}
+html[data-compact-player] #movie_player{width:min(320px,100%);height:240px;aspect-ratio:auto}
+.ytp-chrome-bottom{position:absolute;z-index:60;bottom:0;left:12px;right:12px;height:48px;background:#0007}.ytp-right-controls{display:flex;justify-content:flex-end;height:40px}.ytp-right-controls-left,.ytp-right-controls-right{display:flex;height:40px}
+.ytp-button{border:0;color:white;background:transparent;width:48px;height:40px;cursor:pointer}#below,#description{background:#222;padding:16px}button{border-radius:8px;background:var(--fixture-control-base);color:var(--fixture-control-text);padding:8px;border:0}.thumb{height:110px;background:linear-gradient(45deg,#904eff,#ff823d);margin-bottom:12px;border-radius:10px}
+.ytSpecButtonShapeNextFilled{background:#f1f1f1;color:#0f0f0f}
+.ytSpecButtonShapeNextHost{position:relative;border-radius:999px}.ytSpecButtonShapeNextTonal{background:rgba(255,255,255,.1)}.ytChipShapeButtonReset{padding:0;background:transparent}.ytChipShapeActive,.ytChipShapeInactive{padding:8px 12px;margin-right:6px;border-radius:8px}.ytChipShapeActive{background:#f1f1f1;color:#0f0f0f}.ytChipShapeInactive{background:rgba(255,255,255,.1);color:white}
+#full-bleed-container{display:none}:is(ytd-watch-flexy,ytd-watch-grid)[theater] #full-bleed-container{display:block;height:44vh;background:#000}:is(ytd-watch-flexy,ytd-watch-grid)[theater] #movie_player{width:100%;height:100%;aspect-ratio:auto}:is(ytd-watch-flexy,ytd-watch-grid)[theater] .html5-video-container{background:#000}
+/* Light mode changes the actual page palette, not only the popup fixture. */
+html:not([dark]),html:not([dark]) body{color:#0f0f0f;background:#fff}html:not([dark]){--fixture-popup-base:#fff;--fixture-control-base:#0000000d;--fixture-control-text:#0f0f0f}
+html:not([dark]) :is(ytd-app,ytd-masthead,#columns,#secondary,#below,#description){background:#fff}
+html:not([dark]) .ytSpecButtonShapeNextFilled{background:#0f0f0f;color:#fff}
+html:not([dark]) .ytSpecButtonShapeNextTonal{background:#0000000d;color:#0f0f0f}
+html:not([dark]) .ytChipShapeButtonReset{background:transparent}
+html:not([dark]) .ytChipShapeActive{background:#0f0f0f;color:#fff}
+html:not([dark]) .ytChipShapeInactive{background:#0000000d;color:#0f0f0f}
+</style><link id="ambient-style" rel="stylesheet" href="/ambient.css"><script>if(new URLSearchParams(location.search).has('baseline'))document.querySelector('#ambient-style').href='/baseline-ambient.css';</script></head>
+<body><ytd-app><ytd-masthead><div id="background">YouTube-style verification fixture</div><div id="end"><div id="buttons"><ytd-button-renderer><button class="fixture-native-topbar-button" aria-label="作成"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v8h8v2h-8v8h-2v-8H3v-2h8z"/></svg><span>作成</span></button></ytd-button-renderer><ytd-notification-topbar-button-renderer><button class="fixture-native-topbar-button" aria-label="通知"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0-6 6v5l-2 3v1h16v-1l-2-3V9a6 6 0 0 0-6-6zm0 18a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2z"/></svg></button></ytd-notification-topbar-button-renderer><ytd-topbar-menu-button-renderer><button class="fixture-native-topbar-button" aria-label="アカウント"><span class="fixture-avatar">YT</span></button></ytd-topbar-menu-button-renderer></div></div></ytd-masthead>
+<div id="content"><div id="page-manager"><ytd-watch-flexy><div id="columns"><div id="primary"><div id="primary-inner">
+<div id="movie_player"><div class="html5-video-container"><video class="html5-main-video" autoplay muted playsinline></video></div><div class="ytp-chrome-bottom"><div class="ytp-right-controls"><div class="ytp-right-controls-left"><button class="ytp-settings-button ytp-button" aria-label="設定" aria-expanded="false">⚙</button></div><div class="ytp-right-controls-right"><button class="ytp-size-button ytp-button" aria-label="シアターモード">▭</button><button class="ytp-fullscreen-button ytp-button" aria-label="全画面">⛶</button></div></div></div></div>
+<div id="below"><h2>動画タイトルとボタンを保持</h2><button class="ytSpecButtonShapeNextHost ytSpecButtonShapeNextMono ytSpecButtonShapeNextTonal">共有</button><button class="ytSpecButtonShapeNextHost ytSpecButtonShapeNextMono ytSpecButtonShapeNextTonal">保存</button><div id="description">説明欄の背景</div><ytd-comments id="comments">コメント欄の背景</ytd-comments></div>
+</div></div><div id="secondary"><div class="thumb"></div>関連動画の文字<div class="thumb"></div></div></div></ytd-watch-flexy></div></div></ytd-app>
+<script>
+if(fixtureParameters.has('grid')){
+  const oldWatch=document.querySelector('ytd-watch-flexy');
+  const grid=document.createElement('ytd-watch-grid');
+  grid.append(...oldWatch.childNodes);oldWatch.replaceWith(grid);
+}
+// The demo keeps the legacy bag intact and models WebExtension per-key storage.
+// Only this self-authored fixture seeds the requested saved-OFF scenario.
+if(fixtureParameters.has('saved-off'))localStorage.setItem('yac-setting:enabled','false');
+const fixtureStorageListeners=new Set(),fixtureObservedStorage=new Map();
+const fixtureStorageDelay=Math.min(30000,Math.max(0,Number(fixtureParameters.get('storage-delay'))||0));
+let fixtureInitialStorageRead=true;
+function fixtureDecodeStored(raw){
+  if(raw===null)return undefined;
+  try{return JSON.parse(raw);}catch{return undefined;}
+}
+for(let index=0;index<localStorage.length;index++){
+  const key=localStorage.key(index);fixtureObservedStorage.set(key,localStorage.getItem(key));
+}
+function fixtureNotifyStorage(changes){
+  if(!Object.keys(changes).length)return;
+  for(const listener of [...fixtureStorageListeners])listener(changes,'local');
+}
+const browser={
+  runtime:{getManifest:()=>globalThis.yacFixtureManifest,
+    ...(!fixtureParameters.has('main')?{getURL:filename=>new URL(filename,location.href).href}:{})},
+  storage:{
+    onChanged:{addListener:listener=>fixtureStorageListeners.add(listener),removeListener:listener=>fixtureStorageListeners.delete(listener)},
+    local:{
+      get:async keys=>{
+        const names=typeof keys==='string'?[keys]:Array.isArray(keys)?keys:
+          keys&&typeof keys==='object'?Object.keys(keys):Array.from({length:localStorage.length},(_,index)=>localStorage.key(index));
+        const result={};
+        for(const key of names){
+          const raw=localStorage.getItem(key),value=fixtureDecodeStored(raw);
+          if(value!==undefined)result[key]=value;
+          else if(keys&&typeof keys==='object'&&!Array.isArray(keys))result[key]=keys[key];
+        }
+        const delay=fixtureInitialStorageRead?fixtureStorageDelay:0;fixtureInitialStorageRead=false;
+        if(delay)await new Promise(resolve=>setTimeout(resolve,delay));
+        return result;
+      },
+      set:async values=>{
+        if(fixtureParameters.has('context-invalidated')){
+          const count=Number(document.documentElement.getAttribute('data-fixture-retired-writes')||0)+1;
+          document.documentElement.setAttribute('data-fixture-retired-writes',String(count));
+          throw new Error('Extension context invalidated.');
+        }
+        const changes={};
+        for(const [key,value] of Object.entries(values)){
+          const oldRaw=localStorage.getItem(key),newRaw=JSON.stringify(value);
+          if(newRaw===undefined)throw new TypeError('Fixture storage requires JSON values');
+          if(oldRaw===newRaw)continue;
+          localStorage.setItem(key,newRaw);fixtureObservedStorage.set(key,newRaw);
+          changes[key]={oldValue:fixtureDecodeStored(oldRaw),newValue:fixtureDecodeStored(newRaw)};
+        }
+        queueMicrotask(()=>fixtureNotifyStorage(changes));
+      }
+    }
+  }
+};
+window.addEventListener('storage',event=>{
+  if(event.storageArea!==localStorage)return;
+  const changes={};
+  if(event.key===null){
+    for(const [key,raw] of fixtureObservedStorage)changes[key]={oldValue:fixtureDecodeStored(raw),newValue:undefined};
+    fixtureObservedStorage.clear();
+  }else{
+    changes[event.key]={oldValue:fixtureDecodeStored(event.oldValue),newValue:fixtureDecodeStored(event.newValue)};
+    if(event.newValue===null)fixtureObservedStorage.delete(event.key);else fixtureObservedStorage.set(event.key,event.newValue);
+  }
+  fixtureNotifyStorage(changes);
+});
+const sample=document.createElement('canvas');sample.width=640;sample.height=360;
+if(fixtureParameters.has('search')){
+  // Current lowercase/uppercase class names and the legacy field share the
+  // same native-sized faces. The theme fixture is loaded later in the document.
+  const searchStyle=document.createElement('style');
+  searchStyle.textContent=`
+    ytd-masthead{height:auto;min-height:56px;padding:8px 24px;line-height:normal;flex-wrap:wrap}
+    #fixture-searches{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px;flex-basis:100%}
+    #fixture-searches :is(yt-searchbox,ytd-searchbox){display:flex;width:280px;height:40px}
+    #fixture-searches :is(.ytSearchboxComponentInputBox,.YtSearchboxComponentInputBox,#container){display:flex;flex:1;min-width:0;align-items:center;border:1px solid #555;border-radius:20px 0 0 20px;background:var(--fixture-popup-base);padding:0 12px}
+    #fixture-searches input{width:100%;min-width:0;padding:0;color:inherit;background:transparent;border:0;outline:none;font:inherit}
+    #fixture-searches :is(.ytSearchboxComponentSearchButton,.YtSearchboxComponentSearchButton,#search-icon-legacy){width:52px;border:1px solid #555;border-left:0;border-radius:0 20px 20px 0;background:var(--fixture-control-base);padding:0;cursor:pointer}
+  `;
+  document.head.append(searchStyle);
+  const searches=document.createElement('div');searches.id='fixture-searches';
+  searches.innerHTML='<yt-searchbox><div class="ytSearchboxComponentInputBox"><input aria-label="Current search" value="Current search"></div><button class="ytSearchboxComponentSearchButton" aria-label="Current search button">⌕</button></yt-searchbox><yt-searchbox><div class="YtSearchboxComponentInputBox"><input aria-label="Uppercase search" value="Uppercase search"></div><button class="YtSearchboxComponentSearchButton" aria-label="Uppercase search button">⌕</button></yt-searchbox><ytd-searchbox mode="legacy"><div id="container" class="ytd-searchbox"><div id="search-input"><input aria-label="Legacy search" value="Legacy search"></div></div><button id="search-icon-legacy" class="ytd-searchbox" aria-label="Legacy search button">⌕</button></ytd-searchbox>';
+  searches.querySelectorAll('button').forEach(button=>button.onclick=()=>button.closest('yt-searchbox,ytd-searchbox').querySelector('input').focus());
+  document.querySelector('ytd-masthead').append(searches);
+}
+if(new URLSearchParams(location.search).has('enhancer')){
+  const toolbarStyle=document.createElement('style');
+  toolbarStyle.textContent=`
+    .efyt-control-bar{display:flex;width:max-content;background:#181818;border-radius:18px;padding:0 6px;margin:8px auto}
+    .efyt-control-bar button{position:relative;width:36px;height:36px;padding:6px;background:transparent;border:0;border-radius:0;cursor:pointer}
+    .efyt-control-bar svg{width:24px;height:24px;fill:#cfcfcf}
+    .efyt-control-bar button:hover svg{fill:#fff}.efyt-control-bar button[aria-pressed="true"] svg{fill:#ff4081}
+    .efyt-control-bar button:hover::after{content:attr(data-tooltip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);padding:6px 8px;border-radius:4px;background:#181818;color:white;white-space:nowrap}
+  `;
+  document.head.append(toolbarStyle);
+  const toolbar=document.createElement('div');toolbar.className='efyt-control-bar centered';
+  toolbar.innerHTML='<button id="fixture-efyt-loop" aria-label="Demo loop" aria-pressed="false" data-tooltip="Demo loop"><svg viewBox="0 0 24 24"><path d="M4 6h13V3l5 4-5 4V8H4zm16 12H7v3l-5-4 5-4v3h13z"/></svg></button><button aria-label="Demo picture" data-tooltip="Demo picture"><svg viewBox="0 0 24 24"><path d="M2 4h20v16H2zm2 2v12h16V6zm1 10 4-5 3 3 3-4 4 6z"/></svg></button><button aria-label="Demo expand" data-tooltip="Demo expand"><svg viewBox="0 0 24 24"><path d="M2 2h8v2H4v6H2zm12 0h8v8h-2V4h-6zM2 14h2v6h6v2H2zm18 0h2v8h-8v-2h6z"/></svg></button><button aria-label="Demo options" data-tooltip="Demo options"><svg viewBox="0 0 24 24"><path d="M3 5h18v2H3zm0 6h18v2H3zm0 6h18v2H3z"/></svg></button>';
+  toolbar.querySelector('button').onclick=e=>{const b=e.currentTarget;b.setAttribute('aria-pressed',String(b.getAttribute('aria-pressed')!=='true'));};
+  document.querySelector('#movie_player').after(toolbar);
+  if(new URLSearchParams(location.search).has('compare-toolbar')){
+    const compare=document.createElement('div');compare.id='fixture-toolbar-comparison';
+    const comparisonStyle=document.createElement('style');
+    comparisonStyle.textContent=`
+      #fixture-toolbar-comparison{margin:8px 0;padding:12px;border-radius:12px;color:white}
+      #fixture-toolbar-comparison .fixture-surface{display:inline-block;width:48%;text-align:center;border-radius:10px;background:linear-gradient(90deg,#877b9c,#c287a2,#91bbc3)}
+      #fixture-toolbar-comparison .efyt-control-bar{margin:8px auto}
+      html.yac-active .efyt-control-bar[data-fixture-baseline]{background-color:rgba(28,28,28,.72)!important;box-shadow:none!important;backdrop-filter:blur(12px)!important}
+      html.yac-active .efyt-control-bar[data-fixture-baseline] button svg{filter:none!important}
+    `;
+    document.head.append(comparisonStyle);
+    const previous=toolbar.cloneNode(true);previous.setAttribute('data-fixture-baseline','');previous.querySelector('[id]').removeAttribute('id');
+    const before=document.createElement('div');before.className='fixture-surface';before.textContent='Before · 0.2.9';before.append(previous);
+    const after=document.createElement('div');after.className='fixture-surface';after.textContent='After · 0.2.10';after.append(toolbar);
+    compare.append(before,after);document.querySelector('#movie_player').after(compare);
+  }
+}
+if(new URLSearchParams(location.search).has('surfaces')){
+  const surfaceStyle=document.createElement('style');
+  surfaceStyle.textContent=`
+    tp-yt-app-drawer#guide{position:fixed;left:0;top:56px;bottom:0;width:210px;z-index:110}
+    #guide #contentContainer,#guide-wrapper,#guide-content{height:100%;background:#0f0f0f}
+    #guide-wrapper,#guide-content{background:#181818}
+    ytd-guide-renderer,ytd-guide-section-renderer,ytd-guide-entry-renderer{display:block}
+    ytd-guide-renderer{padding:16px 12px}ytd-guide-entry-renderer{padding:12px;border-radius:8px}
+    ytd-guide-entry-renderer[active],ytd-guide-entry-renderer:hover{background:#ffffff24}
+    ytd-popup-container .fixture-popup{display:block;position:fixed;z-index:120;border-radius:12px;overflow:hidden;box-shadow:0 8px 32px #0005}
+    yt-sheet-view-model,yt-contextual-sheet-layout,yt-list-view-model,yt-list-item-view-model,ytd-menu-popup-renderer,tp-yt-paper-listbox,ytd-multi-page-menu-renderer,ytd-simple-menu-header-renderer,ytd-notification-renderer{display:block}
+    #fixture-modern-menu{left:234px;top:100px;width:240px}yt-contextual-sheet-layout{background:#282828;padding:8px 0}
+    yt-list-item-view-model{padding:12px 18px}yt-list-item-view-model:hover{background:#ffffff24}
+    #fixture-notifications{right:24px;top:100px;width:280px;background:#181818}
+    ytd-simple-menu-header-renderer{padding:16px;border-bottom:1px solid #ffffff30;background:#232323}
+    ytd-notification-renderer{padding:16px;min-height:60px}ytd-notification-renderer:hover{background:#ffffff24}
+    #fixture-report-menu{right:24px;top:404px;width:180px;background:#282828}
+    tp-yt-paper-listbox{background:#282828;padding:8px}tp-yt-paper-listbox button{width:100%;text-align:left;background:transparent}
+    tp-yt-paper-listbox button:hover{background:#ffffff24}
+    /* Model the observed native wrapper and DeepDark direct-child fill. */
+    ytd-popup-container .dropdown-content.style-scope.ytd-popup-container > *{background:var(--second-background,var(--fixture-popup-base))!important}
+    html:not([dark]) :is(ytd-guide-renderer,ytd-popup-container){color:#0f0f0f}
+    html:not([dark]) #guide :is(#contentContainer,#guide-wrapper,#guide-content),html:not([dark]) :is(yt-contextual-sheet-layout,#fixture-notifications,#fixture-report-menu,tp-yt-paper-listbox,ytd-simple-menu-header-renderer){background:#fff}
+    html:not([dark]) ytd-popup-container button{color:#0f0f0f}
+  `;
+  document.head.append(surfaceStyle);
+  const guide=document.createElement('tp-yt-app-drawer');guide.id='guide';
+  guide.innerHTML='<div id="contentContainer" class="style-scope tp-yt-app-drawer"><div id="guide-wrapper" class="style-scope ytd-app"><div id="guide-content" class="style-scope ytd-app"><ytd-guide-renderer><ytd-guide-section-renderer><ytd-guide-entry-renderer active>Home</ytd-guide-entry-renderer><ytd-guide-entry-renderer>Shorts</ytd-guide-entry-renderer><ytd-guide-entry-renderer>Subscriptions</ytd-guide-entry-renderer><hr><ytd-guide-entry-renderer>History</ytd-guide-entry-renderer><ytd-guide-entry-renderer>Playlists</ytd-guide-entry-renderer></ytd-guide-section-renderer></ytd-guide-renderer></div></div></div>';
+  document.querySelector('ytd-app > #content').append(guide);
+  const toggleGuide=document.createElement('button');toggleGuide.id='fixture-toggle-guide';toggleGuide.textContent='Close sidebar';
+  toggleGuide.onclick=()=>{guide.hidden=!guide.hidden;toggleGuide.textContent=guide.hidden?'Open sidebar':'Close sidebar';};
+  document.querySelector('#background').append(toggleGuide);
+  const openSurfaces=document.createElement('button');openSurfaces.id='fixture-open-surfaces';openSurfaces.textContent='Open menus';
+  openSurfaces.onclick=()=>{
+    if(document.querySelector('#fixture-popups'))return;
+    const popups=document.createElement('ytd-popup-container');popups.id='fixture-popups';
+    popups.innerHTML='<yt-sheet-view-model id="fixture-modern-menu" class="fixture-popup ytSheetViewModelHost ytSheetViewModelContextual"><yt-contextual-sheet-layout class="ytContextualSheetLayoutHost"><div class="ytContextualSheetLayoutContentContainer"><yt-list-view-model><yt-list-item-view-model>Add to queue</yt-list-item-view-model><yt-list-item-view-model>Save to Watch later</yt-list-item-view-model><yt-list-item-view-model>Save to playlist</yt-list-item-view-model><yt-list-item-view-model>Share</yt-list-item-view-model><yt-list-item-view-model>Report</yt-list-item-view-model></yt-list-view-model></div></yt-contextual-sheet-layout></yt-sheet-view-model><ytd-multi-page-menu-renderer id="fixture-notifications" class="fixture-popup"><div id="header"><ytd-simple-menu-header-renderer>Notifications</ytd-simple-menu-header-renderer></div><div id="sections"><ytd-notification-renderer>Example notification<br><small>Self-authored demonstration</small></ytd-notification-renderer><ytd-notification-renderer>Another example<br><small>No account content is used</small></ytd-notification-renderer></div></ytd-multi-page-menu-renderer><ytd-menu-popup-renderer id="fixture-report-menu" class="fixture-popup"><tp-yt-paper-listbox><button>Report</button></tp-yt-paper-listbox></ytd-menu-popup-renderer>';
+    for(const popup of [...popups.children]){
+      const dropdown=document.createElement('div');
+      dropdown.className='dropdown-content style-scope ytd-popup-container';
+      popup.replaceWith(dropdown);dropdown.append(popup);
+    }
+    document.querySelector('ytd-app').append(popups);
+  };
+  document.querySelector('#background').append(openSurfaces);
+}
+if(fixtureParameters.has('profile-card')){
+  // Exact comment profile classes from native-profile-20261003.json, with
+  // self-authored content. The submenu branch models its captured CSS rule;
+  // the captured native submenu itself was empty, so this is not native UI proof.
+  const style=document.createElement('style');style.textContent=`
+    html{--yt-spec-text-primary:#0f0f0f;--yt-spec-text-secondary:#606060;--fixture-profile-face:#fff;--fixture-profile-divider:rgba(0,0,0,.1)}
+    html[dark]{--yt-spec-text-primary:#f1f1f1;--yt-spec-text-secondary:#aaa;--fixture-profile-face:#212121;--fixture-profile-divider:rgba(255,255,255,.2)}
+    #fixture-profile-popups [hidden]{display:none!important}
+    .fixture-current-profile-menu{display:block;position:fixed;z-index:120;right:24px;top:84px;width:360px;border-radius:12px;background:var(--fixture-profile-face);box-shadow:0 4px 32px rgba(0,0,0,.1);font:12px/18px system-ui}
+    .ytProfileCardViewModelHost{display:flex;padding-top:4px;flex-direction:column;align-items:flex-start;align-self:stretch;width:360px;border-radius:12px;box-sizing:border-box;background:var(--fixture-profile-face);box-shadow:0 8px 24px rgba(0,0,0,.1)}
+    .fixture-current-profile-menu #submenu.ytd-multi-page-menu-renderer{display:flex;overflow:auto;max-height:512px;width:360px}
+    .fixture-current-profile-menu #submenu.ytd-multi-page-menu-renderer .ytd-multi-page-menu-renderer:first-child{height:inherit;background:var(--fixture-profile-face)}
+    .ytProfileIdentityInfoViewModelHost{display:block;width:100%}.ytProfileIdentityInfoViewModelFrame{display:flex;flex-direction:column;align-items:flex-start;align-self:stretch}
+    .ytProfileIdentityInfoViewModelChannelInfoSection{display:flex;padding:4px 16px;align-items:center;align-self:stretch}.ytProfileIdentityInfoViewModelAvatar{padding-right:8px;flex-shrink:0}.ytProfileIdentityInfoViewModelTrio{flex:1;min-width:0}
+    .ytProfileIdentityInfoViewModelChannelName{font:700 20px/28px system-ui}.ytProfileIdentityInfoViewModelChannelNameHeader{display:flex;align-items:center;gap:4px}
+    :is(.ytProfileIdentityInfoViewModelChannelName,.ytProfileIdentityInfoViewModelMetadataHandleWithBoldFont,.ytProfileIdentityInfoViewModelChannelDescriptionAlternate,.ytProfileInfoViewModelSectionTitle,.ytProfileInfoViewModelSectionTitleModern,.ytCommentInteractionViewModelVideoTitle,.ytCommentInteractionViewModelVideoTitleQuote){color:var(--yt-spec-text-primary)}
+    :is(.ytProfileIdentityInfoViewModelChannelDescription,.ytProfileIdentityInfoViewModelMetadataContent,.ytProfileIdentityInfoViewModelMetadataHandle,.ytProfileIdentityInfoViewModelMetadataPronouns,.ytProfileIdentityInfoViewModelMetadataDelimiter,.ytProfileInfoViewModelSectionSubtitle,.ytProfileInfoViewModelSectionDivider,.ytCommentInteractionViewModelCommentContent){color:var(--yt-spec-text-secondary)}
+    .ytProfileIdentityInfoViewModelChannelDescription{padding:8px 16px}.ytProfileIdentityInfoViewModelButtons{display:flex;gap:8px;padding:12px 16px 16px;align-self:stretch}
+    .ytProfileIdentityInfoViewModelDivider{align-self:stretch;border-bottom:1px solid var(--fixture-profile-divider)}.ytProfileInfoViewModelHost{display:block;width:360px;max-height:360px;overflow-y:auto}
+    .ytProfileInfoViewModelHeader{padding:16px 16px 8px}.ytProfileInfoViewModelSectionTitle{font:700 18px/26px system-ui}.ytProfileInfoViewModelComment{padding:8px 16px}
+    .fixture-profile-banner{width:336px;height:36px;margin:8px 12px;background:linear-gradient(110deg,#694ccc,#ee9872);border-radius:8px}.fixture-profile-avatar{display:block;width:56px;height:56px;background:linear-gradient(135deg,#23778e,#72c26d);border-radius:50%}
+    .fixture-profile-badge{background:#00764b;color:#fff;padding:2px 6px;border-radius:999px}.fixture-profile-native-svg{width:18px;height:18px;fill:#3ea6ff}.fixture-profile-heart{color:#ff4081}.fixture-profile-accent{color:#3ea6ff}
+    .fixture-profile-action{background:#ff4081;color:#fff}.fixture-profile-neutral{background:#ffffff1a;color:var(--yt-spec-text-primary)}.fixture-current-profile-menu button:focus-visible{outline:2px solid #3ea6ff;outline-offset:2px}
+    #fixture-profile-controls{padding:12px;border-radius:8px;background:#222;color:#eee;margin-top:12px}#fixture-profile-result{display:block;white-space:pre-wrap;max-height:100px;overflow:auto}
+  `;document.head.append(style);
+  const popups=document.createElement('ytd-popup-container');popups.id='fixture-profile-popups';
+  const menu=document.createElement('ytd-multi-page-menu-renderer');menu.id='fixture-profile-menu';menu.className='fixture-current-profile-menu style-scope ytd-popup-container';menu.setAttribute('menu-style','multi-page-menu-style-type-profile-card-comments');
+  menu.innerHTML='<div id="sections" class="style-scope ytd-multi-page-menu-renderer"></div><div id="submenu" class="menu-container style-scope ytd-multi-page-menu-renderer" hidden></div>';
+  const card=document.createElement('yt-profile-card-view-model');card.className='ytProfileCardViewModelHost';
+  card.innerHTML='<yt-profile-identity-info-view-model class="ytProfileIdentityInfoViewModelHost"><div class="ytProfileIdentityInfoViewModelFrame"><div class="ytProfileIdentityInfoViewModelChannelBannerContainer"><div class="fixture-profile-banner" role="img" aria-label="Self-authored banner"></div></div><div class="ytProfileIdentityInfoViewModelChannelInfoSection"><div class="ytProfileIdentityInfoViewModelAvatar"><img class="fixture-profile-avatar" alt="Self-authored avatar" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div><div class="ytProfileIdentityInfoViewModelTrio"><div class="ytProfileIdentityInfoViewModelChannelNameHeader"><span class="ytProfileIdentityInfoViewModelChannelName">Example creator</span><svg class="fixture-profile-native-svg" viewBox="0 0 24 24"><path d="m9 16-5-5 2-2 3 3 9-9 2 2z"/></svg></div><span class="ytProfileIdentityInfoViewModelMetadataHandleWithBoldFont">@example</span><div class="ytProfileIdentityInfoViewModelMetadataContent">Example channel <span class="ytProfileIdentityInfoViewModelMetadataDelimiter"> · </span> Original metadata</div></div></div><div class="ytProfileIdentityInfoViewModelChannelDescription">Original secondary channel description</div><div class="ytProfileIdentityInfoViewModelButtons"><button class="fixture-profile-action ytSpecButtonShapeNextHost ytSpecButtonShapeNextFilled ytSpecButtonShapeNextCallToAction">Subscribe</button><button class="fixture-profile-neutral ytSpecButtonShapeNextHost ytSpecButtonShapeNextTonal ytSpecButtonShapeNextMono" aria-pressed="true">View channel</button><span class="fixture-profile-badge">Member</span></div><div class="ytProfileIdentityInfoViewModelDivider"></div></div></yt-profile-identity-info-view-model><yt-profile-info-view-model class="ytProfileInfoViewModelHost"><div class="ytProfileInfoViewModelHeader"><span class="ytProfileInfoViewModelSectionTitle">Activity on this channel</span><span class="ytProfileInfoViewModelSectionSubtitle">Original secondary section text <span class="fixture-profile-heart">♥</span></span><a class="fixture-profile-accent" href="#profile-preview">Original accent link</a></div></yt-profile-info-view-model>';
+  const info=card.querySelector('yt-profile-info-view-model');for(let index=0;index<9;index++){const row=document.createElement('div');row.className='ytProfileInfoViewModelComment';row.innerHTML='<div><span class="ytCommentInteractionViewModelCommentContent">Self-authored comment preview '+index+'</span><br><span class="ytCommentInteractionViewModelVideoTitle">Original video title</span><span class="ytCommentInteractionViewModelVideoTitleQuote"> · quote</span></div>';info.append(row);}
+  menu.querySelector('#sections').append(card);popups.append(menu);
+  const unrelated=document.createElement('yt-profile-card-view-model');unrelated.className='ytProfileCardViewModelHost';unrelated.hidden=true;popups.append(unrelated);document.querySelector('ytd-app').append(popups);
+  const controls=document.createElement('section');controls.id='fixture-profile-controls';controls.innerHTML='<strong>Current comment profile card</strong><div><button id="fixture-profile-open">Show/hide card</button><button id="fixture-profile-nested">Use captured submenu shape</button><button id="fixture-check-profile">Check current profile shades and native states</button></div><output id="fixture-profile-result">Ready. Self-authored current class structure; copied native card verification is separate.</output>';document.getElementById('movie_player').after(controls);
+  let nested=false;const setNested=value=>{nested=value;const sections=menu.querySelector('#sections'),submenu=menu.querySelector('#submenu');if(value){let wrapper=submenu.firstElementChild;if(!wrapper){wrapper=document.createElement('div');wrapper.className='style-scope ytd-multi-page-menu-renderer';submenu.append(wrapper);}wrapper.append(card);}else sections.append(card);sections.hidden=value;submenu.hidden=!value;};
+  controls.querySelector('#fixture-profile-open').onclick=()=>{menu.hidden=!menu.hidden;};controls.querySelector('#fixture-profile-nested').onclick=()=>setNested(!nested);
+  controls.querySelector('#fixture-check-profile').onclick=async event=>{
+    const button=event.currentTarget,report=controls.querySelector('#fixture-profile-result'),root=document.getElementById('yac-controls')?.shadowRoot;
+    const fields=Object.fromEntries(['enabled','surfaceMultiplier','navigationDensity'].map(key=>[key,root?.getElementById('yac-'+key)]));
+    if(Object.values(fields).some(field=>!field)){report.textContent='FAIL: settings controller is not ready';report.dataset.status='fail';return;}
+    const saved=Object.fromEntries(Object.entries(fields).map(([key,field])=>[key,key==='enabled'?field.checked:field.value])),dark=document.documentElement.hasAttribute('dark'),oldNested=nested,oldHidden=menu.hidden,focused=document.activeElement;
+    const failures=[],checks=[],cases=[],baseline={};const check=(value,name)=>{checks.push(name);if(!value)failures.push(name);};
+    const wait=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))),alpha=value=>Number(value.match(/[\d.]+/g)?.[3]??1),rect=node=>{const r=node.getBoundingClientRect();return [r.width,r.height];};
+    const update=async(key,value)=>{const field=fields[key];if(key==='enabled')field.checked=value;else field.value=value;field.dispatchEvent(new Event('input',{bubbles:true}));await wait();};
+    const probe=(variable,property='backgroundColor')=>{const n=document.createElement('span');n.style[property]='var('+variable+')';n.style.position='absolute';menu.append(n);const value=getComputedStyle(n)[property];n.remove();return value;};
+    const neutral=card.querySelector('.fixture-profile-neutral'),divider=card.querySelector('.ytProfileIdentityInfoViewModelDivider'),media=[...card.querySelectorAll('.fixture-profile-banner,.fixture-profile-avatar')],svg=card.querySelector('svg'),action=card.querySelector('.fixture-profile-action'),badge=card.querySelector('.fixture-profile-badge'),heart=card.querySelector('.fixture-profile-heart'),accent=card.querySelector('.fixture-profile-accent');
+    const text=[...card.querySelectorAll('.ytProfileIdentityInfoViewModelChannelName,.ytProfileIdentityInfoViewModelMetadataHandleWithBoldFont,.ytProfileIdentityInfoViewModelMetadataContent,.ytProfileIdentityInfoViewModelChannelDescription,.ytProfileInfoViewModelSectionTitle,.ytProfileInfoViewModelSectionSubtitle,.ytCommentInteractionViewModelCommentContent,.ytCommentInteractionViewModelVideoTitle,.ytCommentInteractionViewModelVideoTitleQuote')];
+    const snapshot=()=>({menu:getComputedStyle(menu).backgroundColor,host:getComputedStyle(card).backgroundColor,shadow:getComputedStyle(menu).boxShadow,hostShadow:getComputedStyle(card).boxShadow,divider:getComputedStyle(divider).borderBottomColor,media:media.map(n=>getComputedStyle(n).backgroundImage),svg:getComputedStyle(svg).fill,action:getComputedStyle(action).backgroundColor,badge:getComputedStyle(badge).backgroundColor,heart:getComputedStyle(heart).color,accent:getComputedStyle(accent).color,text:text.map(n=>getComputedStyle(n).color)});
+    const luminance=rgb=>rgb.map(v=>v/255).map(v=>v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)).reduce((sum,v,i)=>sum+v*[.2126,.7152,.0722][i],0),ratio=(a,b)=>{const x=luminance(a),y=luminance(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);};
+    button.disabled=true;let late=null;
+    try{
+      menu.hidden=false;
+      for(const themeDark of [true,false]){
+        document.documentElement.toggleAttribute('dark',themeDark);const theme=themeDark?'dark':'light';setNested(false);await update('enabled',false);baseline[theme]=snapshot();await update('enabled',true);
+        for(const mode of [false,true]){
+          setNested(mode);await update('enabled',false);const geometry=[rect(menu),rect(card)],nativeDividerWidth=getComputedStyle(divider).borderBottomWidth;info.scrollTop=36;neutral.focus({preventScroll:true});const scroll=info.scrollTop,outline=getComputedStyle(neutral).outline;await update('enabled',true);
+          for(const values of [{master:1,nav:100},{master:.5,nav:100},{master:.5,nav:60},{master:0,nav:100},{master:1,nav:0}]){
+            await update('surfaceMultiplier',values.master);await update('navigationDensity',values.nav);const level=values.master*values.nav/100,name=theme+'/'+(mode?'captured submenu':'main')+'/'+JSON.stringify(values),css=getComputedStyle(menu),inner=getComputedStyle(card),state=snapshot(),wrapper=menu.querySelector('#submenu').firstElementChild;
+            check(css.backgroundColor===probe('--yac-menu-surface'),name+': outer owns one navigation face');
+            check(Math.abs(alpha(css.boxShadow)-.1*level)<.002&&css.boxShadow.endsWith('0px 4px 32px 0px'),name+': native outer shadow follows navigation');
+            check(alpha(inner.backgroundColor)===0&&inner.boxShadow==='none'&&inner.backdropFilter==='none',name+': inner card has no paint, shadow or blur');
+            check(css.backdropFilter.includes('blur('+(16*level)+'px)'),name+': outer blur follows navigation');
+            if(mode)check(alpha(getComputedStyle(wrapper).backgroundColor)===0&&getComputedStyle(wrapper).boxShadow==='none'&&getComputedStyle(wrapper).backdropFilter==='none',name+': captured direct submenu wrapper is clear');
+            check(Math.abs(alpha(state.divider)-(themeDark?.2:.1)*level)<.002&&getComputedStyle(divider).borderBottomWidth===nativeDividerWidth,name+': divider color follows navigation without resizing');
+            check([menu,card].every((n,i)=>rect(n).every((v,j)=>Math.abs(v-geometry[i][j])<.01)),name+': original width and height retained');
+            check(info.scrollTop===scroll&&document.activeElement===neutral&&getComputedStyle(neutral).outline===outline,name+': native focus and scroll position retained');
+            check(state.media.every((v,i)=>v===baseline[theme].media[i])&&media.every(n=>n.isConnected),name+': banner and avatar retained');
+            check(svg.isConnected&&state.svg===baseline[theme].svg&&svg.getBoundingClientRect().width===18,name+': original badge SVG retained');
+            check(['action','badge','heart','accent'].every(key=>state[key]===baseline[theme][key]),name+': meaningful action, badge, heart and accent colors retained');
+            check(neutral.getAttribute('aria-pressed')==='true',name+': native button state retained');
+            check(getComputedStyle(unrelated).backgroundColor===baseline[theme].host&&getComputedStyle(unrelated).boxShadow===baseline[theme].hostShadow,name+': unrelated profile host is untouched');
+            if(level===1){const face=css.backgroundColor.match(/[\d.]+/g).map(Number);const min=Math.min(...text.flatMap(n=>{const foreground=getComputedStyle(n).color.match(/[\d.]+/g).slice(0,3).map(Number);return [0,255].map(backdrop=>ratio(foreground,face.slice(0,3).map(v=>v*face[3]+backdrop*(1-face[3]))));}));check(min>=4.5,name+': primary and secondary text contrast >=4.5 at standard shade');}
+            cases.push({theme,mode:mode?'captured submenu':'main',values,background:css.backgroundColor,shadow:css.boxShadow,inner:inner.backgroundColor,divider:state.divider,geometry:[rect(menu),rect(card)],scroll:info.scrollTop});
+          }
+          await update('enabled',false);const off=snapshot();check(['menu','host','shadow','hostShadow','divider'].every(key=>off[key]===baseline[theme][key]),theme+'/'+mode+': OFF restores native faces, shadows and divider');check(off.text.every((v,i)=>v===baseline[theme].text[i]),theme+'/'+mode+': OFF restores native text colors');if(mode)check(getComputedStyle(menu.querySelector('#submenu').firstElementChild).backgroundColor===baseline[theme].host,theme+': OFF restores captured submenu wrapper');await update('enabled',true);
+        }
+        setNested(false);await update('surfaceMultiplier',.5);await update('navigationDensity',100);late=menu.cloneNode(true);late.id='fixture-profile-late';late.style.right='410px';popups.append(late);await wait();const lateHost=late.querySelector('yt-profile-card-view-model');check(alpha(getComputedStyle(lateHost).backgroundColor)===0&&getComputedStyle(lateHost).boxShadow==='none'&&Math.abs(alpha(getComputedStyle(late).boxShadow)-.05)<.002,theme+': late profile menu receives the same CSS without initialization');late.remove();late=null;
+      }
+    }catch(error){failures.push(error.message);}finally{
+      late?.remove();document.documentElement.toggleAttribute('dark',dark);setNested(oldNested);for(const [key,value]of Object.entries(saved))await update(key,value);menu.hidden=oldHidden;button.disabled=false;focused?.focus?.({preventScroll:true});
+    }
+    report.dataset.status=failures.length?'fail':'pass';report.dataset.results=JSON.stringify({checks,failures,cases});report.textContent=failures.length?'FAIL: '+failures.join('\n'):'PASS: '+checks.length+' current comment profile checks: themes, single face, shade/zero, OFF, media, native state and late insertion. Submenu shape is a captured CSS contract only.';
+  };
+}
+if(fixtureParameters.has('panel-tabs')){
+  // Current native engagement header structure with self-authored labels.
+  // This checks the captured chip contract, not unloaded transcript rows.
+  document.documentElement.setAttribute('data-fixture-panel-tabs','');
+  const style=document.createElement('style');style.textContent=`
+    html[data-fixture-panel-tabs]{--yt-spec-text-primary:#0f0f0f;--yt-spec-text-secondary:#606060;--fixture-tab-active:#0f0f0f;--fixture-tab-inverse:#fff;--fixture-tab-inactive:rgba(0,0,0,.05);--fixture-tab-focused:rgba(0,0,0,.1);--fixture-tab-disabled:#909090}
+    html[data-fixture-panel-tabs][dark]{--yt-spec-text-primary:#f1f1f1;--yt-spec-text-secondary:#aaa;--fixture-tab-active:#f1f1f1;--fixture-tab-inverse:#0f0f0f;--fixture-tab-inactive:rgba(255,255,255,.1);--fixture-tab-focused:rgba(255,255,255,.2);--fixture-tab-disabled:#717171}
+    html[data-fixture-panel-tabs][data-fixture-tab-accent]{--yt-spec-text-primary:#eff0f1;--main-text:#eff0f1;--main-color:#ff4081}
+    #fixture-panel-tabs{display:block;margin-top:12px;width:340px;max-width:100%;border-radius:12px;background:var(--fixture-popup-base)}
+    #fixture-panel-tabs ytd-engagement-panel-title-header-renderer{display:block;padding:12px}
+    .fixture-panel-tab-scope chip-bar-view-model.ytChipBarViewModelHost{display:flex;flex-direction:row;position:relative;align-items:stretch}
+    .fixture-panel-tab-scope .ytChipBarViewModelChipBarScrollContainer{display:flex;overflow:auto hidden;scrollbar-width:none}
+    .fixture-panel-tab-scope .ytChipBarViewModelChipWrapper{margin-right:8px}
+    .fixture-panel-tab-scope .ytChipShapeButtonReset{display:inline-flex;color:inherit;border:none;cursor:pointer;outline-width:0;box-sizing:border-box;background:none;text-decoration:none;padding:0;-webkit-tap-highlight-color:transparent}
+    .fixture-panel-tab-scope .ytChipShapeChip{position:relative;align-items:center;border:none;border-radius:8px;display:inline-flex;height:32px;min-width:12px;white-space:nowrap;font:500 14px/20px Arial,sans-serif;padding:0 12px;margin:0}
+    .fixture-panel-tab-scope .ytChipShapeActive{background-color:var(--fixture-tab-active);color:var(--fixture-tab-inverse)}
+    .fixture-panel-tab-scope .ytChipShapeInactive{background-color:var(--fixture-tab-inactive);color:var(--yt-spec-text-primary)}
+    .fixture-panel-tab-scope .ytChipShapeDisabled{background-color:var(--fixture-tab-inactive);color:var(--fixture-tab-disabled)}
+    .fixture-panel-tab-scope .ytChipShapeFocused{outline:2px solid var(--yt-spec-text-primary);outline-offset:-2px;background-color:var(--fixture-tab-focused);color:var(--yt-spec-text-primary)}
+    .fixture-panel-tab-scope button:disabled{opacity:.6;cursor:default}
+    .fixture-panel-tab-scope .ytSpecTouchFeedbackShapeFill{position:absolute;inset:0;border-radius:inherit;background:currentColor;opacity:.16;pointer-events:none}
+    .fixture-panel-tab-scope .fixture-tab-tail .ytSpecTouchFeedbackShapeFill{opacity:.35}
+    .fixture-panel-tab-scope .fixture-tab-svg{width:18px;height:18px;fill:#ff4081;margin-right:4px}
+    html[data-fixture-tab-accent] .fixture-panel-tab-scope .ytChipShapeActive{background:var(--second-background,#282828)!important;color:var(--main-text)!important}
+    html[data-fixture-tab-accent] .fixture-panel-tab-scope .ytChipShapeInactive{background:var(--hover-background,rgba(255,255,255,.14))!important;color:var(--main-text)!important}
+    html[data-fixture-tab-accent] .fixture-panel-tab-scope .ytChipShapeButtonReset[aria-selected="true"] .ytChipShapeActive{background-color:var(--hover-background,rgba(255,255,255,.14))!important;color:var(--main-color)!important}
+    .fixture-panel-tab-scope .ytChipShapeAICustomizedChipBackgroundLightMode{background-image:linear-gradient(to right,#7f0e7f,#c0f)}
+    @media(forced-colors:active){.fixture-panel-tab-scope .ytChipShapeChip{outline:solid 1px;outline-offset:-1px}.fixture-panel-tab-scope .ytChipShapeActive{forced-color-adjust:none;background-color:SelectedItem;color:SelectedItemText}}
+    #fixture-panel-tab-controls{margin-top:12px;padding:12px;border-radius:8px;background:#222;color:#eee}#fixture-panel-tab-result{display:block;white-space:pre-wrap;max-height:100px;overflow:auto}
+  `;document.head.append(style);
+  const createBar=()=>{
+    const bar=document.createElement('chip-bar-view-model');bar.className='ytChipBarViewModelHost style-scope ytd-engagement-panel-title-header-renderer';
+    bar.innerHTML='<div role="tablist" aria-label="Panel contents" class="ytChipBarViewModelChipBarScrollContainer"><div role="presentation" class="ytChipBarViewModelChipWrapper"><chip-view-model class="ytChipViewModelHost" role="presentation"><chip-shape class="ytChipShapeHost" role="presentation"><button class="ytChipShapeButtonReset" role="tab" aria-selected="false" tabindex="-1"><div class="ytChipShapeChip ytChipShapeInactive ytChipShapeOnlyTextPadding"><div>Chapters</div><yt-touch-feedback-shape class="ytSpecTouchFeedbackShapeHost"><div class="ytSpecTouchFeedbackShapeFill"></div></yt-touch-feedback-shape></div></button></chip-shape></chip-view-model></div><div role="presentation" class="ytChipBarViewModelChipWrapper"><chip-view-model class="ytChipViewModelHost" role="presentation"><chip-shape class="ytChipShapeHost" role="presentation"><button class="ytChipShapeButtonReset" role="tab" aria-selected="true" tabindex="0"><div class="ytChipShapeChip ytChipShapeActive ytChipShapeOnlyTextPadding"><div>Transcript</div><yt-touch-feedback-shape class="ytSpecTouchFeedbackShapeHost"><div class="ytSpecTouchFeedbackShapeFill"></div></yt-touch-feedback-shape></div></button></chip-shape></chip-view-model></div></div>';
+    return bar;
+  };
+  const panel=document.createElement('ytd-engagement-panel-section-list-renderer');panel.id='fixture-panel-tabs';panel.className='fixture-panel-tab-scope';panel.setAttribute('target-id','engagement-panel-searchable-transcript');panel.innerHTML='<div id="header" class="style-scope ytd-engagement-panel-section-list-renderer"><ytd-engagement-panel-title-header-renderer></ytd-engagement-panel-title-header-renderer></div>';
+  const header=panel.querySelector('ytd-engagement-panel-title-header-renderer'),bar=createBar();header.append(bar);document.getElementById('movie_player').after(panel);
+  const buttons=[...bar.querySelectorAll('button')],faces=buttons.map(b=>b.firstElementChild),fills=faces.map(f=>f.querySelector('.ytSpecTouchFeedbackShapeFill'));
+  const controls=document.createElement('section');controls.id='fixture-panel-tab-controls';controls.innerHTML='<strong>Current engagement header tabs</strong><div><button id="fixture-check-panel-tabs">Check current panel tabs and native states</button></div><output id="fixture-panel-tab-result">Ready. Self-authored current chip structure; native copied-header checks are separate.</output>';panel.after(controls);
+  const outside=document.createElement('div');outside.className='fixture-panel-tab-scope';outside.hidden=true;outside.append(createBar());controls.append(outside);
+  const guards=createBar();guards.hidden=true;const guardButtons=[...guards.querySelectorAll('button')],guardFaces=guardButtons.map(b=>b.firstElementChild);guardButtons[0].disabled=true;guardFaces[0].classList.add('ytChipShapeDisabled');guardFaces[1].classList.add('ytChipShapeAICustomizedChipBackgroundLightMode');header.append(guards);
+  const referenceGuards=guards.cloneNode(true);outside.append(referenceGuards);const referenceGuardFaces=[...referenceGuards.querySelectorAll('.ytChipShapeChip')];
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.classList.add('fixture-tab-svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d','M8 5v14l11-7z');svg.append(path);faces[0].prepend(svg);
+  const select=index=>{buttons.forEach((b,i)=>{b.setAttribute('aria-selected',String(i===index));b.tabIndex=i===index?0:-1;faces[i].classList.toggle('ytChipShapeActive',i===index);faces[i].classList.toggle('ytChipShapeInactive',i!==index);});panel.setAttribute('target-id',index===0?'engagement-panel-macro-markers-description-chapters':'engagement-panel-searchable-transcript');};
+  buttons.forEach((b,index)=>{b.onclick=()=>select(index);b.onfocus=()=>faces[index].classList.add('ytChipShapeFocused');b.onblur=()=>faces[index].classList.remove('ytChipShapeFocused');b.onkeydown=event=>{let next;if(event.key==='ArrowRight'||event.key==='ArrowLeft')next=1-index;else if(event.key==='Home')next=0;else if(event.key==='End')next=1;else if(event.key==='Enter'||event.key===' ')next=index;else return;event.preventDefault();select(next);buttons[next].focus({preventScroll:true});};});
+  controls.querySelector('#fixture-check-panel-tabs').onclick=async event=>{
+    const button=event.currentTarget,report=controls.querySelector('#fixture-panel-tab-result'),root=document.getElementById('yac-controls')?.shadowRoot,keys=['enabled','surfaceMultiplier','controlDensity','readingDensity','navigationDensity'];
+    const fields=Object.fromEntries(keys.map(key=>[key,root?.getElementById('yac-'+key)]));if(Object.values(fields).some(field=>!field)){report.textContent='FAIL: settings controller is not ready';report.dataset.status='fail';return;}
+    const saved=Object.fromEntries(keys.map(key=>[key,key==='enabled'?fields[key].checked:fields[key].value])),dark=document.documentElement.hasAttribute('dark'),accent=document.documentElement.hasAttribute('data-fixture-tab-accent'),focused=document.activeElement,selected=buttons.findIndex(b=>b.getAttribute('aria-selected')==='true');
+    const checks=[],failures=[],cases=[],check=(value,name)=>{checks.push(name);if(!value)failures.push(name);};
+    const wait=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))),alpha=value=>Number(value.match(/[\d.]+/g)?.[3]??1),rect=node=>{const r=node.getBoundingClientRect();return [r.width,r.height];};
+    const update=async(key,value)=>{const field=fields[key];if(key==='enabled')field.checked=value;else field.value=value;field.dispatchEvent(new Event('input',{bubbles:true}));await wait();};
+    const probe=(variable,property='backgroundColor')=>{const node=document.createElement('span');node.style[property]='var('+variable+')';node.style.position='absolute';bar.append(node);const value=getComputedStyle(node)[property];node.remove();return value;};
+    const snapshot=()=>faces.map((f,i)=>{const css=getComputedStyle(f),fill=getComputedStyle(fills[i]);return {background:css.backgroundColor,color:css.color,lens:css.backdropFilter,outline:css.outline,outlineStyle:css.outlineStyle,outlineWidth:css.outlineWidth,outlineColor:css.outlineColor,offset:css.outlineOffset,geometry:rect(f),fillFilter:fill.filter,fillOpacity:fill.opacity};});
+    const focus=index=>{document.activeElement?.blur?.();faces.forEach(f=>f.classList.remove('ytChipShapeFocused'));if(index>=0)buttons[index].focus({preventScroll:true});};
+    button.disabled=true;let late=null;
+    try{
+      for(const theme of ['dark','light','accent']){
+        document.documentElement.toggleAttribute('dark',theme!=='light');document.documentElement.toggleAttribute('data-fixture-tab-accent',theme==='accent');select(1);focus(-1);await update('enabled',false);const nativeSvg=getComputedStyle(svg).fill,nativeOutside=getComputedStyle(outside.querySelector('.ytChipShapeActive')).backgroundColor,nativeDisabled=getComputedStyle(guardButtons[0]).opacity;
+        await update('readingDensity',100);await update('navigationDensity',100);
+        for(const focusIndex of [-1,0,1]){
+          focus(focusIndex);await update('enabled',false);const native=snapshot(),geometry=[rect(panel),rect(bar)];await update('enabled',true);
+          for(const values of [{master:1,control:100},{master:.5,control:100},{master:.5,control:60},{master:0,control:100},{master:1,control:0}]){
+            await update('surfaceMultiplier',values.master);await update('controlDensity',values.control);const level=values.master*values.control/100,name=theme+'/focus'+focusIndex+'/'+JSON.stringify(values),state=snapshot();
+            check(state[0].background===probe(focusIndex===0?'--yac-control-hover-surface':'--yac-control-surface')&&state[1].background===probe('--yac-control-selected-surface'),name+': neutral and selected faces follow the browser-resolved control paint, including selected focus');
+            check(state.every((s,i)=>s.lens===probe(i===focusIndex?'--yac-chip-hover-backdrop':'--yac-chip-backdrop','backdropFilter')),name+': native themed control lens follows the same level');
+            check(state[0].color===native[0].color&&state[1].color===(theme==='accent'?'rgb(255, 64, 129)':probe('--yac-control-text','color')),name+': native normal text and semantic accent retained; inverse selected text matches the lens');
+            check(state.every((s,i)=>s.fillFilter==='opacity('+level+')'&&s.fillOpacity===native[i].fillOpacity),name+': feedback alpha multiplies without replacing native opacity');
+            check(state.every((s,i)=>s.geometry.every((v,j)=>Math.abs(v-native[i].geometry[j])<.01))&&[panel,bar].every((n,i)=>rect(n).every((v,j)=>Math.abs(v-geometry[i][j])<.01)),name+': native chip and parent geometry retained');
+            check(state.every((s,i)=>s.outlineStyle===native[i].outlineStyle&&s.outlineWidth===native[i].outlineWidth&&s.offset===native[i].offset&&(s.outlineStyle==='none'||s.outlineColor===native[i].outlineColor))&&(focusIndex<0||document.activeElement===buttons[focusIndex]),name+': native focus target and visible outline retained');
+            check(buttons.every((b,i)=>b.getAttribute('role')==='tab'&&b.getAttribute('aria-selected')===String(i===1)&&b.tabIndex===(i===1?0:-1)&&faces[i].querySelector('div').textContent===['Chapters','Transcript'][i])&&panel.getAttribute('target-id')==='engagement-panel-searchable-transcript',name+': labels, roles and selected state retained');
+            check(getComputedStyle(svg).fill===nativeSvg&&svg.getBoundingClientRect().width===18&&svg.isConnected,name+': original SVG accent and size retained');
+            check(getComputedStyle(outside.querySelector('.ytChipShapeActive')).backgroundColor===(theme==='accent'?probe('--hover-background'):nativeOutside),name+': non-header chip bar retains its native palette contract');
+            check(guardFaces.every((f,i)=>{const c=getComputedStyle(f),reference=getComputedStyle(referenceGuardFaces[i]);return ['backgroundColor','backgroundImage','color'].every(key=>c[key]===reference[key]);})&&getComputedStyle(guardButtons[0]).opacity===nativeDisabled,name+': disabled and captured AI gradient variants match an unmodified native reference');
+            cases.push({theme,focusIndex,values,state});
+          }
+          bar.classList.add('fixture-tab-tail');await update('surfaceMultiplier',.5);await update('controlDensity',60);check(fills.every(f=>getComputedStyle(f).filter==='opacity(0.3)'&&getComputedStyle(f).opacity==='0.35'),theme+'/focus'+focusIndex+': fading native feedback remains scaled');bar.classList.remove('fixture-tab-tail');
+          await update('enabled',false);const off=snapshot();check(off.every((s,i)=>['background','color','lens','outline','fillFilter','fillOpacity'].every(key=>s[key]===native[i][key])),theme+'/focus'+focusIndex+': OFF restores native face, foreground, outline and feedback');await update('enabled',true);
+        }
+        focus(-1);await update('surfaceMultiplier',.5);await update('controlDensity',60);await update('readingDensity',0);await update('navigationDensity',0);check(getComputedStyle(faces[1]).backgroundColor===probe('--yac-control-selected-surface'),theme+': reading and navigation zero do not change control tabs');
+        late=bar.cloneNode(true);header.append(late);await wait();check(getComputedStyle(late.querySelector('.ytChipShapeActive')).backgroundColor===probe('--yac-control-selected-surface'),theme+': late inserted current header receives the same CSS without initialization');late.remove();late=null;
+        buttons[1].focus({preventScroll:true});buttons[1].dispatchEvent(new KeyboardEvent('keydown',{key:'Home',bubbles:true}));check(document.activeElement===buttons[0]&&buttons[0].getAttribute('aria-selected')==='true'&&panel.getAttribute('target-id')==='engagement-panel-macro-markers-description-chapters',theme+': native-style keyboard selection and chapters target work');buttons[0].dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true}));check(document.activeElement===buttons[1]&&buttons[1].getAttribute('aria-selected')==='true'&&panel.getAttribute('target-id')==='engagement-panel-searchable-transcript',theme+': keyboard returns to transcript without losing focus');
+      }
+    }catch(error){failures.push(error.message);}finally{
+      late?.remove();bar.classList.remove('fixture-tab-tail');focus(-1);document.documentElement.toggleAttribute('dark',dark);document.documentElement.toggleAttribute('data-fixture-tab-accent',accent);select(selected);for(const [key,value]of Object.entries(saved))await update(key,value);button.disabled=false;focused?.focus?.({preventScroll:true});
+    }
+    report.dataset.status=failures.length?'fail':'pass';report.dataset.results=JSON.stringify({checks,failures,cases});report.textContent=failures.length?'FAIL: '+failures.join('\n'):'PASS: '+checks.length+' current header tab checks: native light/dark, captured accent, shade/zero, OFF, focus, keyboard, SVG, guards and late insertion. Actual native interaction and forced colors are separate checks.';
+  };
+}
+if(fixtureParameters.has('engagement')){
+  // A late, self-authored engagement panel models native wrappers and an
+  // external inline theme. No account content or YouTube script is used.
+  const style=document.createElement('style');style.textContent=`
+    #fixture-transcript,ytd-engagement-panel-title-header-renderer,ytd-transcript-search-panel-renderer,ytd-transcript-search-box-renderer,ytd-transcript-segment-list-renderer{display:block}
+    #fixture-transcript{margin:12px 0;border:1px solid #8886;border-radius:12px;overflow:hidden;background:var(--fixture-popup-base)}
+    #fixture-transcript [data-native-panel-wrapper]{background:var(--fixture-popup-base);padding:12px}
+    #fixture-transcript .input-container{border:1px solid #888;border-radius:8px;background:var(--fixture-control-base);padding:8px}
+    #fixture-transcript input{width:100%;box-sizing:border-box;border:0;outline:0;background:transparent;color:inherit;font:inherit}
+    #fixture-transcript :is(#header,#content){color:var(--fixture-control-text)}
+    #fixture-transcript-results{padding:10px 0;line-height:1.6}
+  `;document.head.append(style);
+  const launch=document.createElement('button');launch.id='fixture-open-transcript';launch.textContent='Open transcript';
+  launch.onclick=()=>{
+    const existing=document.querySelector('#fixture-transcript');if(existing){existing.remove();return;}
+    const panel=document.createElement('ytd-engagement-panel-section-list-renderer');panel.id='fixture-transcript';
+    panel.style.setProperty('background-color','rgb(40, 40, 40)','important');
+    panel.innerHTML='<ytd-engagement-panel-title-header-renderer><div id="header" data-native-panel-wrapper>Transcript <button id="fixture-close-transcript" aria-label="Close transcript">×</button></div></ytd-engagement-panel-title-header-renderer><div id="content" data-native-panel-wrapper><ytd-transcript-search-panel-renderer><ytd-transcript-search-box-renderer><div class="input-container ytd-transcript-search-box-renderer"><input id="fixture-transcript-input" aria-label="Search transcript" placeholder="Search transcript"></div></ytd-transcript-search-box-renderer><ytd-transcript-segment-list-renderer id="fixture-transcript-results">0:01 · A readable transcript panel<br>0:08 · Shared shade controls</ytd-transcript-segment-list-renderer></ytd-transcript-search-panel-renderer></div>';
+    panel.querySelector('.input-container').style.setProperty('background-color','rgb(80, 80, 80)','important');
+    panel.querySelector('#fixture-close-transcript').onclick=()=>panel.remove();
+    document.querySelector('#secondary').prepend(panel);
+  };
+  document.querySelector('#background').append(launch);
+}
+if(fixtureParameters.has('reading-surfaces')){
+  document.documentElement.setAttribute('data-fixture-reading-surfaces','');
+  const style=document.createElement('style');style.textContent=`
+    html[data-fixture-reading-surfaces] ytd-app{position:relative}
+    html[data-fixture-reading-surfaces][data-fixture-backdrop] ytd-app::before{position:absolute}
+    ytd-watch-metadata,ytd-video-primary-info-renderer,ytd-video-secondary-info-renderer,ytd-video-owner-renderer,ytd-comments,ytd-watch-next-secondary-results-renderer,ytd-item-section-renderer,ytd-rich-grid-renderer,ytd-comment-thread-renderer,ytd-comment-view-model{display:block}
+    .fixture-metadata-shell,ytd-comments,#related{margin-top:12px;color:var(--fixture-control-text)}
+    .fixture-metadata-shell{border-radius:12px}#description{padding:0;margin-top:12px}
+    ytd-comments-header-renderer{display:block;margin-bottom:16px}ytd-comment-thread-renderer{margin-bottom:16px}
+    #fixture-native-title{font-size:20px;margin:0 0 12px}#top-row{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    #owner{display:flex;align-items:center;gap:10px;margin-bottom:12px}#owner-name a{font-weight:600;text-decoration:none}.fixture-owner-secondary{font-size:12px;margin-top:3px}
+    #fixture-owner-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(45deg,#904eff,#ff823d)}
+    .fixture-reading-heading{font-size:16px;margin:0 0 8px}.fixture-reading-line{margin:8px 0;line-height:1.6}
+    .fixture-reading-secondary{color:#aaa}html:not([dark]) .fixture-reading-secondary{color:#606060}
+    .fixture-reading-link{color:#ff4081}html:not([dark]) .fixture-reading-link{color:#6200ee}
+    #fixture-comment-draft{box-sizing:border-box;width:100%;padding:8px 0;border:0;border-bottom:1px solid #888;background:transparent;color:inherit;font:inherit}
+    #fixture-comment-draft:focus-visible{outline:2px solid #3ea6ff;outline-offset:2px}
+    #fixture-member-badge{display:inline-block;background:#00764b;color:white;border-radius:999px;padding:2px 8px}
+    #related .thumb{margin-top:12px}#fixture-related-body{margin:0}
+  `;document.head.append(style);
+  const description=document.getElementById('description');description.className='style-scope ytd-watch-metadata';
+  description.style.setProperty('background-color','var(--fixture-popup-base)','important');
+  description.innerHTML='<div id="description-inner" class="style-scope ytd-watch-metadata"><h3 class="fixture-reading-heading">Description</h3><p class="fixture-reading-line">Primary description text stays readable.</p><p class="fixture-reading-line fixture-reading-secondary">Secondary text · Self-authored example</p><a class="fixture-reading-link" href="#demo-description-link">Original accent link</a></div>';
+  description.querySelector('#description-inner').style.setProperty('background-color','var(--fixture-control-base)','important');
+  const title=document.createElement('div');title.id='title';title.style.setProperty('background-color','var(--fixture-control-base)','important');
+  const heading=document.querySelector('#below h2');heading.id='fixture-native-title';title.append(heading);
+  const actions=document.createElement('div');actions.id='actions';actions.append(...document.querySelectorAll('#below > button'));
+  const owner=document.createElement('ytd-video-owner-renderer');owner.id='owner';owner.style.setProperty('background-color','var(--fixture-control-base)','important');
+  owner.innerHTML='<div id="fixture-owner-avatar" role="img" aria-label="Demo channel avatar"></div><div><div id="owner-name"><a class="fixture-reading-link" href="#demo-channel">Demo channel</a></div><div class="fixture-reading-secondary fixture-owner-secondary">123K subscribers</div></div>';
+  const topRow=document.createElement('div');topRow.id='top-row';topRow.style.setProperty('background-color','var(--fixture-control-base)','important');topRow.append(owner,actions);
+  const metadataShell=name=>{const shell=document.createElement(name);shell.className='fixture-metadata-shell';shell.style.setProperty('background-color','var(--fixture-popup-base)','important');if(name==='ytd-watch-metadata'){shell.setAttribute('modern-metapanel','');shell.setAttribute('clickable-description','');shell.setAttribute('description-collapsed','');}return shell;};
+  let metadata=metadataShell('ytd-watch-metadata'),primaryMetadata=null;
+  description.replaceWith(metadata);metadata.append(title,topRow,description);
+  const layout=document.createElement('button');layout.id='fixture-reading-layout';layout.textContent='Use legacy description';
+  layout.onclick=()=>{const modern=metadata.localName==='ytd-watch-metadata',next=metadataShell(modern?'ytd-video-secondary-info-renderer':'ytd-watch-metadata');if(modern){primaryMetadata=metadataShell('ytd-video-primary-info-renderer');metadata.before(primaryMetadata);primaryMetadata.append(title,actions);next.append(owner,description);}else{next.append(title,topRow,description);topRow.append(owner,actions);primaryMetadata.remove();primaryMetadata=null;}metadata.replaceWith(next);metadata=next;description.className='style-scope '+metadata.localName;layout.textContent=modern?'Use modern description':'Use legacy description';};document.querySelector('#background').append(layout);
+  const comments=document.getElementById('comments');comments.style.setProperty('background-color','var(--fixture-popup-base)','important');
+  comments.innerHTML='<ytd-comments-header-renderer><h3 class="fixture-reading-heading">Comments</h3><input id="fixture-comment-draft" aria-label="Demo comment draft" value="Self-authored draft"></ytd-comments-header-renderer><ytd-item-section-renderer id="contents"><ytd-comment-thread-renderer><ytd-comment-view-model><p id="fixture-comment-primary" class="fixture-reading-line">Primary comment text and reply controls remain.</p><p class="fixture-reading-line fixture-reading-secondary">2 days ago · Secondary text</p><a class="fixture-reading-link" href="#demo-comment-link">Native accent reply link</a> <span id="fixture-member-badge">Member</span></ytd-comment-view-model></ytd-comment-thread-renderer></ytd-item-section-renderer>';
+  comments.querySelector('#contents').style.setProperty('background-color','var(--fixture-control-base)','important');
+  const related=document.createElement('div');related.id='related';related.style.setProperty('background-color','var(--fixture-popup-base)','important');
+  related.innerHTML='<ytd-watch-next-secondary-results-renderer id="fixture-related-results"><ytd-item-section-renderer id="fixture-result-section"><ytd-rich-grid-renderer id="fixture-nested-grid"><h3 class="fixture-reading-heading">Related videos</h3><div class="thumb" id="fixture-related-media"></div><div id="fixture-related-body"><p class="fixture-reading-line">Original thumbnail and primary title</p><p class="fixture-reading-line fixture-reading-secondary">Demo creator · Secondary details</p><a class="fixture-reading-link" href="#demo-related-link">Accent details</a></div></ytd-rich-grid-renderer></ytd-item-section-renderer></ytd-watch-next-secondary-results-renderer>';
+  for(const element of related.querySelectorAll('ytd-watch-next-secondary-results-renderer,ytd-item-section-renderer,ytd-rich-grid-renderer'))element.style.setProperty('background-color','var(--fixture-popup-base)','important');
+  document.getElementById('secondary').replaceChildren(related);
+  const previewPlaylist=document.createElement('button');previewPlaylist.id='fixture-reading-playlist';previewPlaylist.textContent='Preview nested playlist';
+  const placement=document.createElement('button');placement.id='fixture-reading-playlist-placement';placement.textContent='Move playlist outside results';placement.disabled=true;
+  const playlistState=document.createElement('output');playlistState.id='fixture-reading-playlist-state';
+  const reportMixedPaint=()=>{const paints={};for(const id of ['related','fixture-related-results','fixture-result-section','fixture-nested-grid'])paints[id]=getComputedStyle(document.getElementById(id)).backgroundColor;const row=related.querySelector('ytd-playlist-panel-video-renderer');if(row)paints.playing=getComputedStyle(row).backgroundColor;playlistState.dataset.paints=JSON.stringify(paints);playlistState.textContent='Synchronous result face: '+paints['fixture-result-section'];};
+  previewPlaylist.onclick=()=>{const existing=related.querySelector('ytd-playlist-panel-renderer');if(existing){existing.remove();previewPlaylist.textContent='Preview nested playlist';placement.disabled=true;}else{const panel=document.createElement('ytd-playlist-panel-renderer');panel.innerHTML='<ytd-playlist-panel-video-renderer selected>Playing demo row</ytd-playlist-panel-video-renderer>';panel.querySelector('[selected]').style.backgroundColor='rgba(255,255,255,.18)';related.querySelector('ytd-watch-next-secondary-results-renderer').append(panel);previewPlaylist.textContent='Remove nested playlist';placement.textContent='Move playlist outside results';placement.disabled=false;}reportMixedPaint();};
+  placement.onclick=()=>{const panel=related.querySelector('ytd-playlist-panel-renderer'),outside=panel.parentElement===related;(outside?related.querySelector('ytd-watch-next-secondary-results-renderer'):related).append(panel);placement.textContent=outside?'Move playlist outside results':'Move playlist inside results';reportMixedPaint();};document.querySelector('#background').append(previewPlaylist,placement,playlistState);
+}
+if(fixtureParameters.has('search-surfaces')){
+  const style=document.createElement('style');style.textContent=`
+    .fixture-search-surface{position:fixed;z-index:120;display:block;border-radius:12px;padding:12px;background:var(--fixture-popup-base)!important;color:var(--fixture-control-text);box-shadow:0 8px 24px #0005}
+    #fixture-suggestions-modern{left:96px;top:100px;width:240px}
+    #fixture-suggestions-legacy{left:376px;top:100px;width:240px;padding:12px}
+    .sbdd_b .sbsb_a{display:block;background:var(--fixture-popup-base)!important}
+    .fixture-suggestion{display:block;width:100%;padding:10px;margin:0;text-align:left;border:0;border-radius:6px;background:transparent;color:inherit;font:inherit;cursor:pointer}
+    .fixture-suggestion[aria-selected="true"],.fixture-suggestion:hover{background:#fff2}
+    .fixture-suggestion:focus-visible,#fixture-mini-guide a:focus-visible{outline:2px solid #3ea6ff;outline-offset:-2px}
+    .fixture-search-history{color:#ff4081}html:not([dark]) .fixture-search-history{color:#6200ee}
+    #fixture-mini-guide{position:fixed;z-index:120;left:8px;top:100px;width:72px;padding:4px;display:block;color:var(--fixture-control-text)}
+    ytd-mini-guide-renderer,a.ytd-mini-guide-entry-renderer{background:var(--fixture-popup-base)!important}
+    #fixture-mini-guide ytd-mini-guide-entry-renderer,#fixture-mini-guide a{display:block}
+    #fixture-mini-guide a{padding:16px 2px;text-align:center;font-size:11px;text-decoration:none;color:inherit;border-radius:8px}
+    #fixture-mini-guide [active] a{color:#ff4081}
+    html:not([dark]) #fixture-mini-guide [active] a{color:#6200ee}
+    #fixture-search-dialogs{position:fixed;right:24px;top:100px;z-index:120;width:260px;color:var(--fixture-control-text)}
+    #fixture-search-dialogs tp-yt-paper-dialog{display:block;margin-bottom:14px;border-radius:12px}
+    tp-yt-paper-dialog{background:var(--fixture-popup-base)!important;box-shadow:0 8px 24px #0005}
+    #fixture-search-dialogs [dialog]{display:block;padding:14px;border-radius:12px}
+    ytd-voice-search-dialog-renderer[dialog],yt-confirm-dialog-renderer[dialog][dialog][dialog]{background:var(--fixture-popup-base)!important}
+    #fixture-search-dialogs h3{margin:0 0 8px;font-size:14px}#fixture-search-dialogs p{margin:8px 0}
+    #fixture-microphone-circle{width:36px;height:36px;display:grid;place-items:center;background:#ff4e45;color:white;border-radius:50%}
+    #fixture-confirm-action{background:#3ea6ff;color:#0f0f0f}
+    .fixture-menu-reference{position:fixed;z-index:119;pointer-events:none;background:transparent}
+    html[data-fixture-backdrop="white"] .fixture-menu-reference{background:white}
+    html[data-fixture-backdrop="black"] .fixture-menu-reference{background:black}
+  `;document.head.append(style);
+  const modern=document.createElement('div');modern.id='fixture-suggestions-modern';modern.className='fixture-search-surface ytSearchboxComponentSuggestionsContainer';modern.setAttribute('role','listbox');modern.setAttribute('aria-label','Modern search suggestions');
+  modern.innerHTML='<button class="fixture-suggestion ytSuggestionComponentSuggestion" role="option" aria-selected="true">Ambient music</button><button class="fixture-suggestion ytSuggestionComponentSuggestion" role="option" aria-selected="false"><span class="fixture-search-history">Recent search</span></button><button class="fixture-suggestion ytSuggestionComponentSuggestion" role="option" aria-selected="false">Live performances</button>';
+  const legacy=document.createElement('div');legacy.id='fixture-suggestions-legacy';legacy.className='fixture-search-surface sbdd_b';
+  legacy.innerHTML='<div class="sbsb_a" role="listbox" aria-label="Legacy search suggestions"><button class="fixture-suggestion sbsb_c gsfs sbsb_d" role="option" aria-selected="true">Ambient music</button><button class="fixture-suggestion sbsb_c gsfs" role="option" aria-selected="false"><span class="fixture-search-history">Recent search</span></button></div>';
+  const mini=document.createElement('ytd-mini-guide-renderer');mini.id='fixture-mini-guide';mini.innerHTML='<ytd-mini-guide-entry-renderer active><a class="ytd-mini-guide-entry-renderer" href="#demo-home" aria-current="page">Home</a></ytd-mini-guide-entry-renderer><ytd-mini-guide-entry-renderer><a class="ytd-mini-guide-entry-renderer" href="#demo-shorts">Shorts</a></ytd-mini-guide-entry-renderer>';
+  const dialogs=document.createElement('ytd-popup-container');dialogs.id='fixture-search-dialogs';dialogs.innerHTML='<tp-yt-paper-dialog><ytd-voice-search-dialog-renderer dialog role="dialog" aria-label="Simulated voice search"><h3>Voice search preview</h3><div id="fixture-microphone-circle" aria-label="Simulated microphone state">●</div><p>No microphone is used.</p><button class="ytSpecButtonShapeNextHost ytSpecButtonShapeNextTonal ytSpecButtonShapeNextMono">Cancel preview</button></ytd-voice-search-dialog-renderer></tp-yt-paper-dialog><tp-yt-paper-dialog><yt-confirm-dialog-renderer dialog role="dialog" aria-label="Simulated confirmation"><h3>Confirmation preview</h3><p>Native action colors remain.</p><button id="fixture-confirm-action" class="ytSpecButtonShapeNextHost ytSpecButtonShapeNextFilled ytSpecButtonShapeNextCallToAction">Demo action</button></yt-confirm-dialog-renderer></tp-yt-paper-dialog>';
+  document.querySelector('ytd-app').append(modern,legacy,mini,dialogs);
+  // Static references sit behind the component faces, above the demo video.
+  // They permit real PNG checks without pausing or flashing the video.
+  for(const face of [modern,legacy,mini,...dialogs.querySelectorAll('[dialog]')]){
+    const rect=face.getBoundingClientRect(),reference=document.createElement('div');reference.className='fixture-menu-reference';reference.setAttribute('aria-hidden','true');
+    Object.assign(reference.style,{left:rect.x+'px',top:rect.y+'px',width:rect.width+'px',height:rect.height+'px'});document.querySelector('ytd-app').append(reference);
+  }
+  const state=document.createElement('output');state.id='fixture-search-selection';state.textContent='Selection preview';document.querySelector('#background').append(state);
+  for(const box of [modern,legacy.querySelector('.sbsb_a')]){
+    const rows=[...box.querySelectorAll('[role="option"]')];
+    const select=row=>{for(const item of rows){const selected=item===row;item.setAttribute('aria-selected',String(selected));if(item.classList.contains('sbsb_c'))item.classList.toggle('sbsb_d',selected);}state.textContent=row.textContent;};
+    for(const row of rows){row.onclick=()=>select(row);row.onkeydown=e=>{if(!['ArrowDown','ArrowUp'].includes(e.key))return;e.preventDefault();const next=rows[(rows.indexOf(row)+(e.key==='ArrowDown'?1:rows.length-1))%rows.length];select(next);next.focus();};}
+  }
+  const casing=document.createElement('button');casing.id='fixture-search-casing';casing.textContent='Use uppercase search classes';casing.onclick=()=>{const upper=modern.classList.contains('ytSearchboxComponentSuggestionsContainer');modern.classList.toggle('ytSearchboxComponentSuggestionsContainer',!upper);modern.classList.toggle('YtSearchboxComponentSuggestionsContainer',upper);for(const row of modern.querySelectorAll('[role="option"]')){row.classList.toggle('ytSuggestionComponentSuggestion',!upper);row.classList.toggle('YtSuggestionComponentSuggestion',upper);}casing.textContent=upper?'Use lowercase search classes':'Use uppercase search classes';};document.querySelector('#background').append(casing);
+}
+if(fixtureParameters.has('overlay-surfaces')){
+  // Self-authored popup structures use component names from cached theme CSS.
+  // They exercise appearance only; no account, report or purchase is submitted.
+  document.documentElement.setAttribute('data-fixture-overlays','');
+  const style=document.createElement('style');style.textContent=`
+    html[data-fixture-overlays] ytd-app{position:relative}
+    html[data-fixture-overlays][data-fixture-backdrop] ytd-app::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:white}
+    html[data-fixture-overlays][data-fixture-backdrop="black"] ytd-app::before{background:black}
+    html[data-fixture-overlays][data-fixture-backdrop] #yac-background{visibility:hidden!important}
+    html[data-fixture-overlays][data-fixture-backdrop] #movie_player::before{content:'';position:absolute;inset:0;z-index:5;background:white;pointer-events:none}
+    html[data-fixture-overlays][data-fixture-backdrop="black"] #movie_player::before{background:black}
+    #fixture-overlay-host{position:fixed;right:24px;top:94px;z-index:120;width:290px;color:var(--fixture-control-text)}
+    #fixture-overlay-host :is(tp-yt-paper-dialog,paper-dialog){display:block;margin:0;border-radius:12px}
+    #fixture-overlay-host :is([dialog],.yt-spec-dialog-layout){display:block;border-radius:12px}
+    .fixture-overlay-body{padding:16px 16px 44px;line-height:1.6}
+    .fixture-overlay-body h3{margin:0 0 8px;font-size:16px}.fixture-overlay-body p{margin:8px 0}
+    .fixture-overlay-secondary{color:#aaa}html:not([dark]) .fixture-overlay-secondary{color:#606060}
+    .fixture-overlay-accent{color:#ff4081}html:not([dark]) .fixture-overlay-accent{color:#6200ee}
+    .yt-spec-dialog-layout,[dialog][dialog][dialog],paper-dialog,tp-yt-paper-dialog{background-color:var(--fixture-popup-base)!important;box-shadow:0 8px 24px #0005}
+    #fixture-overlay-draft{box-sizing:border-box;width:100%;font:inherit;padding:6px;color:inherit;background:transparent;border:1px solid #888;border-radius:6px}
+    #fixture-overlay-draft:focus-visible,.fixture-overlay-body button:focus-visible{outline:2px solid #3ea6ff;outline-offset:2px}
+    #fixture-overlay-action{margin:8px 0;background:#065fd4;color:white}
+    #fixture-overlay-badge{display:inline-block;background:#00764b;color:white;padding:2px 8px;border-radius:999px}
+    #fixture-overlay-media{width:56px;height:28px;border-radius:6px;background:linear-gradient(45deg,#904eff,#ff823d);margin:8px 0}
+    #fixture-player-menu{position:absolute;top:32px;left:24px;z-index:61;width:270px;padding:12px 0 36px;border-radius:12px;background:#282828;opacity:.9;color:white;box-shadow:0 8px 24px #0005}
+    .ytp-panel-header{padding:0 16px 10px;color:white;font-weight:600}
+    #fixture-player-menu .ytp-menuitem{display:flex;align-items:center;justify-content:space-between;box-sizing:border-box;width:100%;height:42px;padding:0 16px;text-align:left;font:inherit;color:white;background:transparent;border:0;border-radius:0}
+    #fixture-player-menu .ytp-menuitem:is(:hover,[aria-checked="true"]){background:#ffffff1f}
+    #fixture-player-menu .ytp-menuitem[aria-disabled="true"]{opacity:.5}
+    #fixture-player-menu .ytp-menuitem:focus-visible{outline:2px solid #8ab4f8;outline-offset:-3px}
+    #fixture-player-menu .fixture-player-secondary{color:#aaa}
+    #fixture-player-toggle{width:28px;height:14px;border-radius:999px;background:#3ea6ff}
+    #fixture-overlay-controls{background:#222;color:#eee;padding:12px;border-radius:8px;margin-top:12px;line-height:1.6}
+    #fixture-overlay-controls button,#fixture-overlay-kind{color:#eee;background:#404040;margin:3px;padding:6px;border-radius:6px}
+    #fixture-overlay-result{display:block;white-space:pre-wrap}
+  `;document.head.append(style);
+  const popup=document.createElement('ytd-popup-container');popup.id='fixture-overlay-host';
+  const wrapper=document.createElement('tp-yt-paper-dialog');wrapper.id='fixture-overlay-wrapper';
+  const bridge=document.createElement('section');bridge.id='fixture-overlay-bridge';wrapper.append(bridge);popup.append(wrapper);document.querySelector('ytd-app').append(popup);
+  const body=document.createElement('div');body.className='fixture-overlay-body yt-spec-dialog-layout';
+  body.innerHTML='<h3 id="fixture-overlay-title">Share preview</h3><p id="fixture-overlay-primary">Original dialog text remains.</p><p class="fixture-overlay-secondary">Secondary information remains.</p><a class="fixture-overlay-accent" href="#demo-overlay-link">Original accent link</a><div id="fixture-overlay-media" role="img" aria-label="Demo dialog artwork"></div><input id="fixture-overlay-draft" aria-label="Demo dialog draft" value="Self-authored overlay draft"><button id="fixture-overlay-action" class="ytSpecButtonShapeNextHost ytSpecButtonShapeNextFilled ytSpecButtonShapeNextCallToAction">Demo action</button> <span id="fixture-overlay-badge">Member</span><button id="fixture-overlay-cancel" class="ytSpecButtonShapeNextHost ytSpecButtonShapeNextTonal ytSpecButtonShapeNextMono">Cancel preview</button>';
+  const kinds={share:null,form:'ytd-form-popup-renderer',hotkeys:'ytd-hotkey-dialog-renderer',report:'yt-report-form-modal-renderer',survey:'ytd-single-option-survey-renderer',followup:'ytd-survey-follow-up-renderer',checkbox:'ytd-checkbox-survey-renderer',dismissal:'ytd-dismissal-follow-up-renderer',voice:'ytd-voice-search-dialog-renderer',confirm:'yt-confirm-dialog-renderer'};
+  const controls=document.createElement('section');controls.id='fixture-overlay-controls';
+  controls.innerHTML='<strong>Overlay appearance verification</strong><div><label for="fixture-overlay-kind">Dialog preview </label><select id="fixture-overlay-kind"></select></div><div><button id="fixture-overlay-light">Light theme</button><button id="fixture-overlay-dark">Dark theme</button><button id="fixture-overlay-white">Static white backdrop</button><button id="fixture-overlay-black">Static black backdrop</button><button id="fixture-overlay-ambient">Ambient backdrop</button><button id="fixture-overlay-top">Back to page top</button><button id="fixture-overlay-wrapper-kind">Use legacy paper-dialog wrapper</button></div><button id="fixture-check-overlays">Check ON/OFF, zero and original states</button><output id="fixture-overlay-result">Ready. Only appearance and self-authored input are tested.</output>';
+  document.querySelector('#below').append(controls);const select=controls.querySelector('select');
+  for(const kind of Object.keys(kinds)){const option=document.createElement('option');option.value=kind;option.textContent=kind;select.append(option);}
+  const renderKind=()=>{const kind=select.value,renderer=document.createElement(kinds[kind]||'div');renderer.id='fixture-overlay-renderer';renderer.setAttribute('role','dialog');renderer.setAttribute('aria-label','Simulated '+kind+' dialog');if(kinds[kind])renderer.setAttribute('dialog','');else renderer.className='yt-spec-dialog-layout';renderer.append(body);bridge.replaceChildren(renderer);document.getElementById('fixture-overlay-title').textContent=kind+' preview';};
+  select.onchange=renderKind;renderKind();
+  controls.querySelector('#fixture-overlay-wrapper-kind').onclick=event=>{const old=bridge.parentElement,legacy=old.localName==='tp-yt-paper-dialog',next=document.createElement(legacy?'paper-dialog':'tp-yt-paper-dialog');next.id=old.id;next.append(bridge);old.replaceWith(next);event.currentTarget.textContent=legacy?'Use tp-yt-paper-dialog wrapper':'Use legacy paper-dialog wrapper';};
+  controls.querySelector('#fixture-overlay-light').onclick=()=>document.documentElement.removeAttribute('dark');
+  controls.querySelector('#fixture-overlay-dark').onclick=()=>document.documentElement.setAttribute('dark','');
+  controls.querySelector('#fixture-overlay-white').onclick=()=>document.documentElement.setAttribute('data-fixture-backdrop','white');
+  controls.querySelector('#fixture-overlay-black').onclick=()=>document.documentElement.setAttribute('data-fixture-backdrop','black');
+  controls.querySelector('#fixture-overlay-ambient').onclick=()=>document.documentElement.removeAttribute('data-fixture-backdrop');
+  controls.querySelector('#fixture-overlay-top').onclick=()=>window.scrollTo({top:0,behavior:'instant'});
+  const menu=document.createElement('div');menu.id='fixture-player-menu';menu.className='ytp-settings-menu ytp-popup';menu.setAttribute('role','menu');
+  menu.innerHTML='<div class="ytp-panel-header">Native player menu preview</div><button id="fixture-player-toggle-row" class="ytp-menuitem" role="menuitemcheckbox" aria-checked="true"><span>Demo captions</span><span id="fixture-player-toggle" aria-hidden="true"></span></button><button id="fixture-player-rate" class="ytp-menuitem" role="menuitemradio" aria-checked="true"><span>Normal</span><span class="fixture-player-secondary">1×</span></button><button id="fixture-player-rate-fast" class="ytp-menuitem" role="menuitemradio" aria-checked="false"><span>Fast preview</span><span class="fixture-player-secondary">1.25×</span></button><button class="ytp-menuitem" role="menuitem" aria-disabled="true" disabled>Disabled native item</button>';
+  document.getElementById('movie_player').append(menu);
+  const rows=[...menu.querySelectorAll('.ytp-menuitem:not([aria-disabled="true"])')];
+  rows.forEach((row,index)=>{row.onkeydown=event=>{if(!['ArrowDown','ArrowUp'].includes(event.key))return;event.preventDefault();rows[(index+(event.key==='ArrowDown'?1:rows.length-1))%rows.length].focus();};row.onclick=()=>{const radio=row.getAttribute('role')==='menuitemradio',selected=radio||row.getAttribute('aria-checked')!=='true';if(radio)for(const sibling of rows.filter(item=>item.getAttribute('role')==='menuitemradio'))sibling.setAttribute('aria-checked','false');row.setAttribute('aria-checked',String(selected));};});
+}
+if(fixtureParameters.has('hover-surfaces')){
+  // Known cached component classes only. This is not a model of every current
+  // profile card or a test of native YouTube hover/portal initialization.
+  document.documentElement.setAttribute('data-fixture-hover','');
+  const style=document.createElement('style');style.textContent=`
+    html[data-fixture-hover] ytd-app{position:relative}
+    html[data-fixture-hover][data-fixture-backdrop] ytd-app::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:white}
+    html[data-fixture-hover][data-fixture-backdrop="black"] ytd-app::before{background:black}
+    html[data-fixture-hover][data-fixture-backdrop] #yac-background{visibility:hidden!important}
+    html[data-fixture-hover][data-fixture-backdrop] #movie_player::before{content:'';position:absolute;inset:0;z-index:5;background:white;pointer-events:none}
+    html[data-fixture-hover][data-fixture-backdrop="black"] #movie_player::before{background:black}
+    #fixture-hover-card{position:fixed;right:24px;top:94px;z-index:120;width:290px;color:var(--fixture-control-text);background:var(--fixture-popup-base);box-shadow:0 8px 24px #0005;--hover-background:var(--fixture-popup-base)}
+    .yt-uix-hovercard-card-content,.yt-uix-clickcard-card-content{display:block;padding:16px 16px 44px;box-sizing:border-box;background-color:var(--fixture-popup-base)!important;border:1px solid var(--fixture-popup-base);border-radius:12px;box-shadow:0 8px 24px #0005;line-height:1.6}
+    #fixture-hover-card h3{margin:0 0 8px;font-size:16px}#fixture-hover-card p{margin:8px 0}
+    .fixture-hover-secondary{color:#aaa}html:not([dark]) .fixture-hover-secondary{color:#606060}
+    .fixture-hover-accent{color:#ff4081}html:not([dark]) .fixture-hover-accent{color:#6200ee}
+    .yt-uix-hovercard-card-border,.yt-uix-clickcard-card-border{position:absolute;inset:0;border:1px solid var(--fixture-popup-base);border-radius:12px;pointer-events:none}
+    #fixture-hover-card .yt-uix-card-body-arrow-vertical{position:absolute;left:28px;top:-12px;width:0;height:0;border:6px solid transparent;border-bottom-color:var(--hover-background)}
+    #fixture-hover-card .yt-uix-card-body-arrow-horizontal{position:absolute;left:-12px;top:28px;width:0;height:0;border:6px solid transparent;border-right-color:var(--hover-background)}
+    #fixture-hover-draft{box-sizing:border-box;width:100%;font:inherit;padding:6px;color:inherit;background:transparent;border:1px solid #888;border-radius:6px}
+    #fixture-hover-draft:focus-visible,#fixture-hover-card button:focus-visible{outline:2px solid #3ea6ff;outline-offset:2px}
+    #fixture-hover-action{margin:8px 0;background:#065fd4;color:white}#fixture-hover-badge{display:inline-block;background:#00764b;color:white;padding:2px 8px;border-radius:999px}
+    #fixture-hover-media{width:56px;height:28px;border-radius:6px;background:linear-gradient(45deg,#904eff,#ff823d);margin:8px 0}
+    #fixture-hover-disabled{opacity:.5}
+    #fixture-tooltip-stage{position:absolute;top:32px;left:24px;z-index:61;display:grid;grid-template-columns:repeat(3,150px);gap:20px}
+    .fixture-tooltip-wrapper{position:relative;display:block;color:white}
+    yt-tooltip-renderer,.fixture-tooltip-wrapper #tooltip,.ytp-promotooltip-container{position:relative;display:block;box-sizing:border-box;width:150px;min-height:96px;padding:12px 12px 40px;border-radius:8px;background:#282828;color:white;box-shadow:0 8px 24px #0005}
+    #tooltip.paper-tooltip{color:#ff4081}
+    #fixture-tooltip-stage [hidden]{display:none!important}
+    yt-tooltip-renderer:has(#tooltip){padding:0}
+    yt-tooltip-renderer::before{content:'';position:absolute;top:-12px;left:24px;border:6px solid transparent;border-bottom-color:#282828}
+    .ytp-promotooltip-pointer{position:absolute;left:24px;top:-6px;width:10px;height:10px;box-sizing:border-box;border:5px solid #282828;transform:rotate(45deg)}
+    #fixture-hover-controls{background:#222;color:#eee;padding:12px;border-radius:8px;margin-top:12px;line-height:1.6}
+    #fixture-hover-controls button,#fixture-hover-kind{color:#eee;background:#404040;margin:3px;padding:6px;border-radius:6px}
+    #fixture-hover-result{display:block;white-space:pre-wrap}
+  `;document.head.append(style);
+  const card=document.createElement('div');card.id='fixture-hover-card';
+  const body=document.createElement('div');body.id='fixture-hover-content';
+  body.innerHTML='<h3 id="fixture-hover-title">Profile card preview</h3><p id="fixture-hover-primary">Original card text remains.</p><p class="fixture-hover-secondary">Secondary information remains.</p><a class="fixture-hover-accent" href="#demo-hover-link">Original accent link</a><div id="fixture-hover-media" role="img" aria-label="Demo card artwork"></div><input id="fixture-hover-draft" aria-label="Demo card draft" value="Self-authored card draft"><button id="fixture-hover-action" class="ytSpecButtonShapeNextHost ytSpecButtonShapeNextFilled ytSpecButtonShapeNextCallToAction">Demo action</button> <span id="fixture-hover-badge">Member</span><button id="fixture-hover-neutral" class="ytSpecButtonShapeNextHost ytSpecButtonShapeNextTonal ytSpecButtonShapeNextMono" aria-pressed="false">Neutral preview</button><button id="fixture-hover-disabled" class="ytSpecButtonShapeNextHost ytSpecButtonShapeNextTonal ytSpecButtonShapeNextMono" disabled>Disabled preview</button>';
+  const border=document.createElement('div');border.id='fixture-hover-border';
+  const vertical=document.createElement('div');vertical.className='yt-uix-card-body-arrow-vertical';vertical.setAttribute('aria-hidden','true');
+  const horizontal=document.createElement('div');horizontal.className='yt-uix-card-body-arrow-horizontal';horizontal.setAttribute('aria-hidden','true');
+  card.append(body,border,vertical,horizontal);document.querySelector('ytd-app').append(card);
+  document.getElementById('fixture-hover-neutral').onclick=event=>event.currentTarget.setAttribute('aria-pressed',String(event.currentTarget.getAttribute('aria-pressed')!=='true'));
+  const stage=document.createElement('div');stage.id='fixture-tooltip-stage';
+  stage.innerHTML='<yt-tooltip-renderer id="fixture-tooltip-modern"><span id="fixture-tooltip-modern-label">Modern label</span></yt-tooltip-renderer><tp-yt-paper-tooltip class="fixture-tooltip-wrapper"><div id="tooltip" class="tp-yt-paper-tooltip"><span id="fixture-tooltip-paper-label">Paper label</span></div></tp-yt-paper-tooltip><paper-tooltip class="fixture-tooltip-wrapper"><div id="tooltip" class="paper-tooltip"><span id="fixture-tooltip-legacy-label">Legacy accent</span></div></paper-tooltip><yt-tooltip-renderer id="fixture-tooltip-nested" class="fixture-tooltip-wrapper"><tp-yt-paper-tooltip><div id="tooltip" class="tp-yt-paper-tooltip"><span id="fixture-tooltip-nested-label">Nested label</span></div></tp-yt-paper-tooltip></yt-tooltip-renderer><div class="ytp-promotooltip-container"><span id="fixture-tooltip-promo-label">Player label</span><div class="ytp-promotooltip-pointer" aria-hidden="true"></div></div>';
+  document.getElementById('movie_player').append(stage);
+  const controls=document.createElement('section');controls.id='fixture-hover-controls';
+  controls.innerHTML='<strong>Known card and tooltip appearance verification</strong><div><label for="fixture-hover-kind">Card preview </label><select id="fixture-hover-kind"></select></div><div><button id="fixture-hover-light">Light theme</button><button id="fixture-hover-dark">Dark theme</button><button id="fixture-hover-white">Static white backdrop</button><button id="fixture-hover-black">Static black backdrop</button><button id="fixture-hover-ambient">Ambient backdrop</button><button id="fixture-hover-top">Back to page top</button></div><button id="fixture-check-hover">Check card/tooltip zero, OFF and original states</button><output id="fixture-hover-result">Ready. Cached component shapes only; current native hover behavior remains unverified.</output>';
+  document.getElementById('below').append(controls);const select=controls.querySelector('select');
+  for(const kind of ['hover','click','hover-reverse','click-reverse','hover-flip','click-flip','nested']){const option=document.createElement('option');option.value=kind;option.textContent=kind;select.append(option);}
+  const renderKind=()=>{
+    const kind=select.value,prefix=kind.startsWith('click')?'clickcard':'hovercard';card.className='yt-uix-'+prefix+'-card'+(kind.endsWith('-reverse')?' yt-uix-'+prefix+'-card-reverse':kind.endsWith('-flip')?' yt-uix-'+prefix+'-card-flip':'');
+    const old=card.querySelector('#fixture-hover-inner');if(old){old.replaceWith(...old.childNodes);}
+    body.className='yt-uix-'+prefix+'-card-content';border.className='yt-uix-'+prefix+'-card-border';
+    if(kind==='nested'){const inner=document.createElement('div');inner.id='fixture-hover-inner';inner.className='yt-uix-clickcard-card-content';inner.append(...body.childNodes);body.append(inner);}
+  };select.onchange=renderKind;renderKind();
+  controls.querySelector('#fixture-hover-light').onclick=()=>document.documentElement.removeAttribute('dark');
+  controls.querySelector('#fixture-hover-dark').onclick=()=>document.documentElement.setAttribute('dark','');
+  controls.querySelector('#fixture-hover-white').onclick=()=>document.documentElement.setAttribute('data-fixture-backdrop','white');
+  controls.querySelector('#fixture-hover-black').onclick=()=>document.documentElement.setAttribute('data-fixture-backdrop','black');
+  controls.querySelector('#fixture-hover-ambient').onclick=()=>document.documentElement.removeAttribute('data-fixture-backdrop');
+  controls.querySelector('#fixture-hover-top').onclick=()=>window.scrollTo({top:0,behavior:'instant'});
+}
+if(new URLSearchParams(location.search).has('theme')||new URLSearchParams(location.search).has('controls')){
+  if(new URLSearchParams(location.search).get('theme')==='deepdark'){
+    const fullTheme=document.createElement('link');
+    fullTheme.id='efyt-dark-theme';fullTheme.rel='stylesheet';fullTheme.href='/test-theme.css';document.head.append(fullTheme);
+  }
+  // Model a theme extension's more specific page backgrounds without its code.
+  const theme=document.createElement('style');
+  if(new URLSearchParams(location.search).has('theme')){
+    theme.textContent='#content #page-manager :is(ytd-watch-flexy,ytd-watch-grid),#content #page-manager #columns,#content #page-manager #primary,#content #page-manager #below,#content #page-manager #secondary{background-color:#212121!important}';
+    theme.textContent+='#content #page-manager .box,#content #page-manager ytd-watch-next-secondary-results-renderer{background-color:#212121!important}ytd-engagement-panel-section-list-renderer #content,ytd-engagement-panel-title-header-renderer #header,ytd-transcript-search-panel-renderer{background-color:#272727!important}';
+  }
+  document.head.append(theme);
+  const metadataBox=document.createElement('div');
+  metadataBox.className='box style-scope ytd-watch-flexy';
+  metadataBox.id='fixture-metadata-box';
+  const below=document.querySelector('#below');
+  metadataBox.append(...below.childNodes);below.append(metadataBox);
+  const infoWrapper=document.createElement('div');
+  infoWrapper.className='style-scope ytd-watch-flexy';
+  infoWrapper.id='fixture-info-wrapper';
+  infoWrapper.append(...metadataBox.childNodes);metadataBox.append(infoWrapper);
+  const ticketShelf=document.createElement('div');
+  ticketShelf.id='ticket-shelf';ticketShelf.className='style-scope ytd-watch-flexy';
+  ticketShelf.innerHTML='<ytd-ticket-shelf-renderer class="style-scope ytd-watch-flexy" style="display:block;padding:16px">Event tickets <button class="ytSpecButtonShapeNextHost ytSpecButtonShapeNextMono ytSpecButtonShapeNextTonal">Show tickets</button></ytd-ticket-shelf-renderer>';
+  infoWrapper.append(ticketShelf);
+  const actions=document.createElement('ytd-menu-renderer');
+  actions.className='style-scope ytd-watch-metadata';
+  actions.id='fixture-action-menu';
+  actions.innerHTML='<button class="ytSpecButtonShapeNextHost ytSpecButtonShapeNextMono ytSpecButtonShapeNextTonal">Share <yt-touch-feedback-shape class="ytSpecTouchFeedbackShapeHost"><div class="ytSpecTouchFeedbackShapeFill" style="opacity:0;background:white"></div></yt-touch-feedback-shape></button><button class="ytSpecButtonShapeNextHost ytSpecButtonShapeNextMono ytSpecButtonShapeNextFilled">Subscribe</button>';
+  theme.textContent+='yt-touch-feedback-shape .ytSpecTouchFeedbackShapeFill{opacity:0;transition:opacity .1s}button:hover yt-touch-feedback-shape .ytSpecTouchFeedbackShapeFill{opacity:.16!important}';
+  infoWrapper.append(actions);
+  const related=document.createElement('ytd-watch-next-secondary-results-renderer');
+  related.className='style-scope ytd-watch-flexy';related.style.display='block';
+  const secondary=document.querySelector('#secondary');
+  related.append(...secondary.childNodes);secondary.append(related);
+  const chips=document.createElement('yt-chip-cloud-renderer');
+  chips.innerHTML='<yt-chip-cloud-chip-renderer selected><button class="ytChipShapeButtonReset" role="tab" aria-selected="true"><div class="ytChipShapeActive">All</div></button></yt-chip-cloud-chip-renderer><yt-chip-cloud-chip-renderer><button class="ytChipShapeButtonReset" role="tab" aria-selected="false"><div class="ytChipShapeInactive">Related</div></button></yt-chip-cloud-chip-renderer>';
+  secondary.prepend(chips);
+  const panel=document.createElement('ytd-engagement-panel-section-list-renderer');
+  panel.style.display='block';
+  panel.innerHTML='<ytd-engagement-panel-title-header-renderer style="display:block"><div id="header">Transcript panel <button>Close panel</button></div></ytd-engagement-panel-title-header-renderer><div id="content"><ytd-transcript-search-panel-renderer style="display:block;padding:12px">Transcript text stays visible</ytd-transcript-search-panel-renderer></div>';
+  secondary.prepend(panel);
+  if(new URLSearchParams(location.search).has('theme')){
+    document.querySelector('#secondary').style.setProperty('background-color','#282233','important');
+    document.querySelector('#secondary').style.setProperty('background-image','linear-gradient(#282233,#121212)','important');
+    document.querySelector('#secondary').style.setProperty('box-shadow','0 0 4px #000','important');
+  }
+  const updateTheme=document.createElement('button');
+  updateTheme.textContent='テーマの背景を変更';
+  updateTheme.onclick=()=>document.querySelector('#secondary').style.setProperty('background-color','#304050','important');
+  document.querySelector('#background').append(updateTheme);
+}
+if(new URLSearchParams(location.search).has('playlist')){
+  const playlistStyle=document.createElement('style');
+  playlistStyle.textContent=`
+    #fixture-playlist{--fixture-playlist-face:#fff;--fixture-playing-face:#00000014;display:block;border:1px solid #ffffff30;border-radius:12px;overflow:hidden;margin-bottom:16px;color:#0f0f0f}
+    html[dark] #fixture-playlist{--fixture-playlist-face:#282828;--fixture-playing-face:#ffffff24;color:#eee}
+    #fixture-playlist :is(#container,.header,.playlist-items){display:block;background:var(--fixture-playlist-face)}
+    #fixture-playlist .header{padding:16px;display:flex;align-items:center;gap:12px}
+    #fixture-playlist .header h3{margin:0;flex:1;font-size:16px}
+    #fixture-playlist ytd-playlist-panel-video-renderer{display:block;background:var(--fixture-playlist-face)}
+    #fixture-playlist ytd-playlist-panel-video-renderer[selected]{background:var(--fixture-playing-face)}
+    #fixture-playlist ytd-playlist-panel-video-renderer:hover{background:var(--fixture-playing-face)}
+    #fixture-playlist a{display:flex;gap:8px;padding:12px;align-items:center;color:inherit;text-decoration:none}
+    #fixture-playlist a:focus-visible{outline:2px solid #065fd4;outline-offset:-3px}
+    html[dark] #fixture-playlist a:focus-visible{outline-color:#8ab4f8}
+    #fixture-playlist .fixture-playlist-thumb{width:72px;height:40px;flex-shrink:0;border-radius:6px;background:linear-gradient(135deg,#59bdcd,#8f64db,#dc889b)}
+    #fixture-playlist .fixture-playlist-copy{min-width:0;line-height:1.4}
+    #fixture-playlist .fixture-playlist-copy small{display:block;color:#ff4081}
+    #fixture-playlist #index{width:10px;flex-shrink:0}
+    #fixture-playlist .header button{color:inherit;background:var(--fixture-playing-face)}
+  `;
+  document.head.append(playlistStyle);
+  const playlist=document.createElement('ytd-playlist-panel-renderer');playlist.id='fixture-playlist';
+  playlist.innerHTML='<div id="container" class="style-scope ytd-playlist-panel-renderer"><div id="header" class="header style-scope ytd-playlist-panel-renderer"><h3>Demo mix playlist</h3><button aria-label="Demo playlist options">\u22ef</button></div><div id="items" class="playlist-items style-scope ytd-playlist-panel-renderer"><ytd-playlist-panel-video-renderer use-color-palette><a href="#demo-track-a"><span id="index">1</span><div class="fixture-playlist-thumb"></div><div class="fixture-playlist-copy">Original demo A<small>Demo artist A</small></div></a></ytd-playlist-panel-video-renderer><ytd-playlist-panel-video-renderer selected use-color-palette><a href="#demo-track-b" aria-current="true"><span id="index">\u25b6</span><div class="fixture-playlist-thumb"></div><div class="fixture-playlist-copy">Original demo B<small>Demo artist B</small></div></a></ytd-playlist-panel-video-renderer><ytd-playlist-panel-video-renderer use-color-palette><a href="#demo-track-c"><span id="index">3</span><div class="fixture-playlist-thumb"></div><div class="fixture-playlist-copy">Original demo C<small>Demo artist C</small></div></a></ytd-playlist-panel-video-renderer></div></div>';
+  // Native-like state changes verify that the playing face is never overridden.
+  playlist.querySelectorAll('a').forEach(link=>link.onclick=event=>{
+    event.preventDefault();
+    const chosen=link.closest('ytd-playlist-panel-video-renderer');
+    playlist.querySelectorAll('ytd-playlist-panel-video-renderer').forEach(row=>{
+      const selected=row===chosen;row.toggleAttribute('selected',selected);
+      row.querySelector('a').setAttribute('aria-current',String(selected));
+    });
+  });
+  document.querySelector('#secondary').prepend(playlist);
+}
+if(new URLSearchParams(location.search).has('chat')){
+  const replay=document.createElement('yt-video-metadata-carousel-view-model');
+  replay.style.cssText='display:block;background:#282828;border-radius:12px;padding:16px;margin:12px 0';
+  replay.textContent='Chat replay · View comments from the original stream';
+  document.querySelector('#primary-inner').append(replay);
+  const chat=document.createElement('ytd-live-chat-frame');
+  const frame=document.createElement('iframe');frame.id='chatframe';frame.src='/live_chat'+(fixtureParameters.has('light')?'?light':'');
+  frame.title='Live chat fixture';frame.style.cssText='width:100%;height:240px;border:1px solid #ffffff30';
+  chat.append(frame);document.querySelector('#secondary').prepend(chat);
+}
+const g=sample.getContext('2d');let tick=0;
+if(new URLSearchParams(location.search).has('store')){
+  document.querySelector('#background').firstChild.textContent='Flexible UI · demonstration';
+  document.querySelector('h2').textContent='Ambient colors · original demo video';
+}
+function frame(){g.fillStyle='#121b32';g.fillRect(0,0,640,360);g.fillStyle='#ad68ff';g.fillRect(100+Math.sin(tick++/20)*40,80,320,200);g.fillStyle='#ff3b62';g.fillRect(0,0,640,10);g.fillStyle='#35ff9f';g.fillRect(630,0,10,360);g.fillStyle='#396aff';g.fillRect(0,350,640,10);g.fillStyle='#ffcf4c';g.fillRect(0,0,10,360);if(new URLSearchParams(location.search).has('bars')){g.fillStyle='black';g.fillRect(0,0,640,40);g.fillRect(0,320,640,40);g.fillStyle='#ad68ff';g.fillRect(0,40,640,8);g.fillRect(0,312,640,8);}}
+const diagnosticFrame=frame;
+if(new URLSearchParams(location.search).has('store')){
+  frame=()=>{
+    const gradient=g.createLinearGradient(0,0,640,360);
+    gradient.addColorStop(0,'#438cc4');gradient.addColorStop(.5,'#9e7dea');gradient.addColorStop(1,'#e798a7');
+    g.fillStyle=gradient;g.fillRect(0,0,640,360);
+    const center=g.createRadialGradient(330,180,15,330,180,300);center.addColorStop(0,'#081426ee');center.addColorStop(1,'#08142600');
+    g.fillStyle=center;g.fillRect(0,0,640,360);
+    g.strokeStyle='#ffffffaa';g.lineWidth=2;g.beginPath();g.ellipse(320,180,80,80,0,0,Math.PI*2);g.stroke();
+    g.beginPath();g.ellipse(320,180,27,27,0,0,Math.PI*2);g.stroke();
+    g.font='12px system-ui';g.fillStyle='#ffffffaa';g.textAlign='center';g.fillText('ORIGINAL DEMO GRAPHICS',320,310);
+    tick++;
+  };
+}
+frame();if(!fixtureParameters.has('surface-work'))setInterval(frame,1000/60);
+document.querySelector('video').srcObject=sample.captureStream(60);
+document.querySelector('.ytp-settings-button').onclick=e=>{const b=e.currentTarget;b.setAttribute('aria-expanded',String(b.getAttribute('aria-expanded')!=='true'));};
+const theaterContainer=document.createElement('div');theaterContainer.id='full-bleed-container';
+const watch=document.querySelector('ytd-watch-flexy,ytd-watch-grid'),moviePlayer=document.querySelector('#movie_player'),originalPlayerParent=moviePlayer.parentElement;
+const fullBleedPlayer=document.createElement('div');fullBleedPlayer.id='player-full-bleed-container';fullBleedPlayer.className='style-scope ytd-watch-flexy';fullBleedPlayer.style.height='100%';theaterContainer.append(fullBleedPlayer);
+watch.prepend(theaterContainer);
+document.querySelector('.ytp-size-button').onclick=()=>{const theater=!watch.hasAttribute('theater');watch.toggleAttribute('theater',theater);if(theater)fullBleedPlayer.append(moviePlayer);else originalPlayerParent.prepend(moviePlayer);window.dispatchEvent(new Event('resize'));};
+document.querySelector('.ytp-fullscreen-button').onclick=()=>{if(document.fullscreenElement)document.exitFullscreen();else document.querySelector('#movie_player').requestFullscreen();};
+</script><script src="/black-bar-detector.js"></script><script src="/renderer.js"></script><script src="/flash-monitor.js"></script><script src="/worker-client.js"></script><script src="/settings-store.js"></script><script src="/lucide-icons.js"></script><script>
+// Test the real dialog without displaying flashing imagery. Numeric detector
+// tests cover detection separately; this fixture simulates its positive result.
+if(new URLSearchParams(location.search).has('warning-demo')){
+  const Detector=YacFlashMonitor;
+  YacFlashMonitor=class extends Detector {
+    constructor(){
+      super();this.fixtureTrigger=false;
+      const trigger=document.createElement('button');trigger.id='fixture-warning-trigger';trigger.textContent='Simulate flash warning';
+      trigger.onclick=()=>{this.fixtureTrigger=true;};
+      document.querySelector('#background').append(trigger);
+    }
+    sample(...args){if(this.fixtureTrigger){this.fixtureTrigger=false;return true;}return super.sample(...args);}
+  };
+}
+if(fixtureParameters.has('surface-work')){
+  // Static video and native DOM behavior only. Prototype-wrapped selector
+  // counters failed their positive controls in this browser and were removed.
+  const controls=document.createElement('section');controls.id='yac-fixture-surface-work';
+  controls.style.cssText='position:fixed;top:12px;right:12px;z-index:2147483647;width:430px;max-height:70vh;overflow:auto;padding:16px;border-radius:12px;background:#202126;color:#eee;font:13px system-ui';
+  const heading=document.createElement('strong');heading.textContent='Idle surface behavior verification';
+  const run=document.createElement('button');run.textContent='Check active / OFF surface behavior';run.style.cssText='display:block;margin:12px 0;padding:8px;color:#eee;background:#414348;border:0;border-radius:8px';
+  const output=document.createElement('pre');output.id='fixture-surface-work-result';output.style.cssText='white-space:pre-wrap;margin:0';output.textContent='Ready. Native DOM behavior, static video. Query counts and timings are not measured here.';
+  controls.append(heading,run,output);document.body.append(controls);
+  const settle=()=>new Promise(resolve=>setTimeout(()=>requestAnimationFrame(()=>queueMicrotask(resolve)),1100));
+  run.onclick=async()=>{
+    const toggle=document.getElementById('yac-controls')?.shadowRoot?.getElementById('yac-enabled')||document.getElementById('yac-enabled'),below=document.getElementById('below');
+    if(!toggle||!below){output.textContent='FAIL: controller is not ready';return;}
+    const originalEnabled=toggle.checked,added=[];
+    const report={scope:'Local native late-surface paint and restoration; no selector-count, YouTube/comment-latency or wall-time claim',backend:document.getElementById('yac-background')?.dataset.renderMode,cases:[]};
+    run.disabled=true;output.dataset.status='running';output.textContent='Checking…';
+    try{
+      for(const enabled of [true,false]){
+        toggle.checked=enabled;toggle.dispatchEvent(new Event('input',{bubbles:true}));await settle();
+        let ticket;
+        for(let i=0;i<50;i++){
+          const wrapper=document.createElement('div');wrapper.style.display='none';
+          wrapper.append(document.createElement('span'));
+          if(i===0){ticket=document.createElement('ytd-ticket-shelf-renderer');ticket.style.setProperty('background-color','rgb(44, 45, 46)','important');wrapper.append(ticket);}
+          added.push(wrapper);below.append(wrapper);
+        }
+        await settle();
+        const ticketPaint=ticket.style.getPropertyValue('background-color'),expected=enabled?'transparent':'rgb(44, 45, 46)';
+        report.cases.push({enabled,addedWrappers:50,ticketPaint,expected,pass:ticketPaint===expected});
+        for(const wrapper of added.splice(0))wrapper.remove();await settle();
+        if(!enabled){
+          const wrapper=document.createElement('div');wrapper.style.display='none';
+          const late=document.createElement('ytd-ticket-shelf-renderer');late.style.setProperty('background-color','rgb(51, 52, 53)','important');wrapper.append(late);below.append(wrapper);added.push(wrapper);
+          await settle();toggle.checked=true;toggle.dispatchEvent(new Event('input',{bubbles:true}));await settle();
+          report.resume={ticketPaint:late.style.getPropertyValue('background-color'),pass:late.style.getPropertyValue('background-color')==='transparent'};
+        }
+      }
+      report.pass=report.cases.every(result=>result.pass)&&report.resume.pass;
+      output.dataset.status=report.pass?'pass':'fail';
+    }catch(error){report.error=String(error);output.dataset.status='fail';}
+    finally{
+      for(const wrapper of added)wrapper.remove();
+      toggle.checked=originalEnabled;toggle.dispatchEvent(new Event('input',{bubbles:true}));await settle();
+      run.disabled=false;output.textContent=JSON.stringify(report,null,2);
+    }
+  };
+}
+const ambientScript=document.createElement('script');ambientScript.src=new URLSearchParams(location.search).has('baseline')?'/baseline-ambient.js':'/ambient.js';document.body.append(ambientScript);
+if(fixtureParameters.has('hover-surfaces')){
+  document.getElementById('fixture-check-hover').onclick=async event=>{
+    const checkButton=event.currentTarget,report=document.getElementById('fixture-hover-result'),root=document.getElementById('yac-controls')?.shadowRoot,toggle=root?.getElementById('yac-enabled')||document.getElementById('yac-enabled');
+    const master=root?.getElementById('yac-surfaceMultiplier'),navigation=root?.getElementById('yac-navigationDensity');
+    if(!toggle||!master||!navigation){report.textContent='FAIL: settings controller is not ready';report.dataset.status='fail';return;}
+    const failures=[],checks=[],check=(condition,name)=>{checks.push(name);if(!condition)failures.push(name);};
+    const select=document.getElementById('fixture-hover-kind'),originalKind=select.value,originalDark=document.documentElement.hasAttribute('dark'),originalEnabled=toggle.checked;
+    const originalMaster=master.value,originalNavigation=navigation.value,originalFocus=document.activeElement;
+    const card=document.getElementById('fixture-hover-card'),content=document.getElementById('fixture-hover-content'),border=document.getElementById('fixture-hover-border'),draft=document.getElementById('fixture-hover-draft'),draftValue=draft.value;
+    const neutral=document.getElementById('fixture-hover-neutral'),originalPressed=neutral.getAttribute('aria-pressed'),disabled=document.getElementById('fixture-hover-disabled');
+    const media=document.getElementById('fixture-hover-media'),action=document.getElementById('fixture-hover-action'),badge=document.getElementById('fixture-hover-badge');
+    const originalMedia=getComputedStyle(media).backgroundImage,originalAction=getComputedStyle(action).backgroundColor,originalBadge=getComputedStyle(badge).backgroundColor,originalDisabled=getComputedStyle(disabled).opacity;
+    const faces=['modern','paper','legacy','nested','promo'].map(kind=>document.getElementById('fixture-tooltip-'+kind+'-label').parentElement);
+    const nativeColors=faces.map(face=>getComputedStyle(face).color),originalOpacities=faces.map(face=>face.style.opacity),originalHidden=faces.map(face=>face.hidden);
+    const wait=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+    const input=async(element,value)=>{element.value=String(value);element.dispatchEvent(new Event('input',{bubbles:true}));await wait();};
+    const enabled=async value=>{if(toggle.checked!==value){toggle.checked=value;toggle.dispatchEvent(new Event('input',{bubbles:true}));}await wait();};
+    const alpha=color=>{const rgba=color.match(/[\d.]+/g)?.map(Number);return rgba?.[3]??1;};
+    const probe=(element,name)=>{const node=document.createElement('span');node.style.backgroundColor=`var(${name})`;element.append(node);const color=getComputedStyle(node).backgroundColor;node.remove();return color;};
+    const noShadow=element=>{const shadow=getComputedStyle(element).boxShadow,colors=shadow.match(/rgba?\([^)]*\)/g)||[];return shadow==='none'||colors.length>0&&colors.every(color=>alpha(color)===0);};
+    const kind=value=>{select.value=value;select.dispatchEvent(new Event('change',{bubbles:true}));};
+    const geometry=element=>{const rect=element.getBoundingClientRect(),style=getComputedStyle(element);return [rect.width,rect.height,style.borderTopWidth,style.borderRightWidth,style.borderBottomWidth,style.borderLeftWidth,style.padding,style.borderRadius,style.transform].join('|');};
+    checkButton.disabled=true;
+    try{
+      await input(master,1);await input(navigation,100);
+      for(const dark of [true,false]){
+        document.documentElement.toggleAttribute('dark',dark);const theme=dark?'dark':'light';
+        for(const option of [...select.options]){
+          kind(option.value);await enabled(false);
+          const shapes=[card,content,border,...card.querySelectorAll('[aria-hidden="true"]'),...faces],nativeGeometry=shapes.map(geometry);
+          check(getComputedStyle(content).backgroundColor===probe(content,'--fixture-popup-base'),`${theme}/${option.value}: OFF restores original content paint`);
+          await enabled(true);
+          check(getComputedStyle(content).backgroundColor===probe(content,'--yac-menu-surface')&&alpha(getComputedStyle(card).backgroundColor)===0,`${theme}/${option.value}: content owns one navigation face`);
+          check(shapes.every((element,index)=>geometry(element)===nativeGeometry[index]),`${theme}/${option.value}: native geometry is unchanged`);
+          const inner=document.getElementById('fixture-hover-inner');
+          if(inner)check(alpha(getComputedStyle(inner).backgroundColor)===0&&alpha(getComputedStyle(inner).borderTopColor)===0&&getComputedStyle(inner).backdropFilter==='none'&&noShadow(inner),`${theme}: nested card does not add paint or blur`);
+          check(getComputedStyle(card.querySelector('.yt-uix-card-body-arrow-vertical')).borderBottomColor===probe(content,'--yac-menu-surface')&&getComputedStyle(card.querySelector('.yt-uix-card-body-arrow-horizontal')).borderRightColor===probe(content,'--yac-menu-surface'),`${theme}/${option.value}: original arrow faces follow navigation`);
+        }
+        check(faces.every(face=>getComputedStyle(face).backgroundColor===probe(face,'--yac-tooltip-surface')),`${theme}: known tooltips share the dark face for original light text`);
+        const nested=document.getElementById('fixture-tooltip-nested');
+        check(alpha(getComputedStyle(nested).backgroundColor)===0&&getComputedStyle(nested).backdropFilter==='none'&&noShadow(nested),`${theme}: nested tooltip host has no second face`);
+        check(faces.every((face,index)=>getComputedStyle(face).color===nativeColors[index]),`${theme}: tooltip foregrounds remain native`);
+        await input(master,.5);await input(navigation,40);
+        // Compare actual paints with a resolved CSS probe: Chromium serializes
+        // the declared .172 alpha as .173 after quantization. Keep the exact
+        // multiplier/coefficient check separate from that serialization.
+        check(Number(getComputedStyle(content).getPropertyValue('--yac-navigation-level'))===.2&&Number(getComputedStyle(content).getPropertyValue('--yac-menu-opacity'))===.172&&getComputedStyle(content).backgroundColor===probe(content,'--yac-menu-surface')&&faces.every(face=>getComputedStyle(face).backgroundColor===probe(face,'--yac-tooltip-surface')),`${theme}: 0.5 times 40% applies 20% of the face`);
+        await input(master,0);await input(navigation,100);
+        for(const option of [...select.options]){
+          kind(option.value);
+          check(alpha(getComputedStyle(content).backgroundColor)===0&&alpha(getComputedStyle(content).borderTopColor)===0&&alpha(getComputedStyle(border).borderTopColor)===0&&noShadow(content)&&noShadow(card)&&noShadow(border)&&getComputedStyle(border).backdropFilter==='none',`${theme}/${option.value}: shared zero clears face, borders and shadows`);
+          check(alpha(getComputedStyle(card.querySelector('.yt-uix-card-body-arrow-vertical')).borderBottomColor)===0&&alpha(getComputedStyle(card.querySelector('.yt-uix-card-body-arrow-horizontal')).borderRightColor)===0,`${theme}/${option.value}: zero clears native arrow paint`);
+        }
+        check(faces.every(face=>alpha(getComputedStyle(face).backgroundColor)===0&&noShadow(face)&&getComputedStyle(face).backdropFilter.includes('blur(0px)')&&!getComputedStyle(face).backdropFilter.includes('brightness(0.')),`${theme}: tooltip zero clears face, shadow, blur and dimming`);
+        check(alpha(getComputedStyle(document.getElementById('fixture-tooltip-modern'),'::before').borderBottomColor)===0&&alpha(getComputedStyle(nested,'::before').borderBottomColor)===0&&alpha(getComputedStyle(document.querySelector('.ytp-promotooltip-pointer')).borderTopColor)===0,`${theme}: tooltip pointers reach zero`);
+        neutral.setAttribute('aria-pressed','true');check(alpha(getComputedStyle(neutral).backgroundColor)===0&&getComputedStyle(neutral).backdropFilter==='none',`${theme}: selected neutral control has no shade floor or extra blur`);
+        neutral.focus({preventScroll:true});const zeroOutline=getComputedStyle(neutral).outline;
+        await enabled(false);check(getComputedStyle(neutral).outline===zeroOutline,`${theme}: exact native focus outline survives zero and OFF`);
+        check(faces.every(face=>getComputedStyle(face).backgroundColor==='rgb(40, 40, 40)'),`${theme}: OFF restores native tooltip paints`);
+        await enabled(true);await input(master,1);await input(navigation,0);
+        check(alpha(getComputedStyle(content).backgroundColor)===0&&faces.every(face=>alpha(getComputedStyle(face).backgroundColor)===0),`${theme}: individual navigation zero clears these surfaces independently`);
+        await input(navigation,100);
+        for(const face of faces){face.style.opacity='.55';face.hidden=true;}
+        await input(master,.4);
+        check(faces.every(face=>getComputedStyle(face).opacity==='0.55'&&face.hidden&&getComputedStyle(face).display==='none'),`${theme}: native fade opacity and hidden state survive shade updates`);
+        faces.forEach((face,index)=>{face.style.opacity=originalOpacities[index];face.hidden=originalHidden[index];});
+        check(draft.value===draftValue&&getComputedStyle(media).backgroundImage===originalMedia&&getComputedStyle(action).backgroundColor===originalAction&&getComputedStyle(badge).backgroundColor===originalBadge&&getComputedStyle(disabled).opacity===originalDisabled&&disabled.disabled,`${theme}: draft, media, CTA, badge and disabled state preserved`);
+      }
+    }catch(error){failures.push(error.message);}finally{
+      faces.forEach((face,index)=>{face.style.opacity=originalOpacities[index];face.hidden=originalHidden[index];});
+      document.documentElement.toggleAttribute('dark',originalDark);kind(originalKind);neutral.setAttribute('aria-pressed',originalPressed);
+      await input(master,originalMaster);await input(navigation,originalNavigation);await enabled(originalEnabled);checkButton.disabled=false;originalFocus?.focus?.({preventScroll:true});
+    }
+    report.dataset.status=failures.length?'fail':'pass';report.dataset.results=JSON.stringify({failures,checks});report.textContent=failures.length?'FAIL: '+failures.join('\n'):'PASS: '+checks.length+' known card/tooltip, multiplicative shade, zero, OFF and original-state checks. Current native YouTube hover cards remain separate.';
+  };
+}
+if(fixtureParameters.has('overlay-surfaces')){
+  document.getElementById('fixture-check-overlays').onclick=async event=>{
+    const checkButton=event.currentTarget,report=document.getElementById('fixture-overlay-result'),root=document.getElementById('yac-controls')?.shadowRoot,toggle=root?.getElementById('yac-enabled')||document.getElementById('yac-enabled');
+    const master=root?.getElementById('yac-surfaceMultiplier'),navigation=root?.getElementById('yac-navigationDensity');
+    if(!toggle||!master||!navigation){report.textContent='FAIL: settings controller is not ready';report.dataset.status='fail';return;}
+    const failures=[],checks=[];const check=(condition,name)=>{checks.push(name);if(!condition)failures.push(name);};
+    const select=document.getElementById('fixture-overlay-kind'),originalKind=select.value,originalDark=document.documentElement.hasAttribute('dark'),originalEnabled=toggle.checked;
+    const originalMaster=master.value,originalNavigation=navigation.value,draft=document.getElementById('fixture-overlay-draft'),draftValue=draft.value;
+    const media=document.getElementById('fixture-overlay-media'),mediaPaint=getComputedStyle(media).backgroundImage,action=document.getElementById('fixture-overlay-action'),badge=document.getElementById('fixture-overlay-badge');
+    const actionPaint=getComputedStyle(action).backgroundColor,badgePaint=getComputedStyle(badge).backgroundColor,menu=document.getElementById('fixture-player-menu'),menuOpacity=getComputedStyle(menu).opacity;
+    const rows=[...menu.querySelectorAll('.ytp-menuitem')],rowStates=rows.map(row=>row.getAttribute('aria-checked')),disabledOpacity=getComputedStyle(rows.at(-1)).opacity;
+    const originalFocus=document.activeElement,wait=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+    const input=async(element,value)=>{element.value=String(value);element.dispatchEvent(new Event('input',{bubbles:true}));await wait();};
+    const enabled=async value=>{if(toggle.checked!==value){toggle.checked=value;toggle.dispatchEvent(new Event('input',{bubbles:true}));}await wait();};
+    const alpha=color=>{const rgba=color.match(/[\d.]+/g)?.map(Number);return rgba?.[3]??1;};
+    const probe=(element,name)=>{const node=document.createElement('span');node.style.backgroundColor=`var(${name})`;element.append(node);const color=getComputedStyle(node).backgroundColor;node.remove();return color;};
+    checkButton.disabled=true;
+    try{
+      await enabled(true);await input(master,1);await input(navigation,100);
+      for(const dark of [true,false]){
+        document.documentElement.toggleAttribute('dark',dark);const theme=dark?'dark':'light';
+        for(const option of [...select.options]){
+          select.value=option.value;select.dispatchEvent(new Event('change',{bubbles:true}));const face=document.getElementById('fixture-overlay-renderer');
+          check(getComputedStyle(face).backgroundColor===probe(face,'--yac-menu-surface'),`${theme}/${option.value}: one navigation face`);
+          check(alpha(getComputedStyle(document.getElementById('fixture-overlay-wrapper')).backgroundColor)===0,`${theme}/${option.value}: wrapper paint is clear`);
+          check(alpha(getComputedStyle(face.querySelector('.fixture-overlay-body')).backgroundColor)===0&&getComputedStyle(face.querySelector('.fixture-overlay-body')).backdropFilter==='none',`${theme}/${option.value}: inner layout has no second face or blur`);
+          check(draft.value===draftValue&&getComputedStyle(media).backgroundImage===mediaPaint&&getComputedStyle(action).backgroundColor===actionPaint&&getComputedStyle(badge).backgroundColor===badgePaint,`${theme}/${option.value}: draft/media/action/badge preserved`);
+        }
+        check(getComputedStyle(menu).backgroundColor==='rgba(28, 28, 28, 0.86)',`${theme}: player face stays dark for native light labels`);
+        check(getComputedStyle(menu.querySelector('.ytp-panel-header')).color==='rgb(255, 255, 255)',`${theme}: native player foreground remains white`);
+        await input(master,0);
+        for(const option of [...select.options]){
+          select.value=option.value;select.dispatchEvent(new Event('change',{bubbles:true}));
+          check(alpha(getComputedStyle(document.getElementById('fixture-overlay-renderer')).backgroundColor)===0,`${theme}/${option.value}: shared zero clears its face`);
+        }
+        check(alpha(getComputedStyle(menu).backgroundColor)===0,`${theme}: shared zero clears player face`);
+        const shadow=getComputedStyle(menu).boxShadow,shadowColors=shadow.match(/rgba?\([^)]*\)/g)||[];
+        check(shadow==='none'||shadowColors.length>0&&shadowColors.every(color=>alpha(color)===0),`${theme}: shadow alpha reaches zero`);
+        check(!getComputedStyle(menu).backdropFilter.includes('brightness(0.')&&getComputedStyle(menu).backdropFilter.includes('blur(0px)'),`${theme}: zero removes dimming and blur`);
+        check(rows.every(row=>alpha(getComputedStyle(row).backgroundColor)===0),`${theme}: selected/neutral rows have no paint floor`);
+        rows[1].focus({preventScroll:true});const zeroFocus=getComputedStyle(rows[1]).outline;
+        await input(master,1);await input(navigation,0);
+        check(alpha(getComputedStyle(menu).backgroundColor)===0&&alpha(getComputedStyle(document.getElementById('fixture-overlay-renderer')).backgroundColor)===0,`${theme}: individual navigation zero is independent`);
+        await input(navigation,100);await enabled(false);
+        for(const option of [...select.options]){
+          select.value=option.value;select.dispatchEvent(new Event('change',{bubbles:true}));const face=document.getElementById('fixture-overlay-renderer');
+          check(getComputedStyle(face).backgroundColor===probe(face,'--fixture-popup-base')&&getComputedStyle(document.getElementById('fixture-overlay-wrapper')).backgroundColor===probe(face,'--fixture-popup-base'),`${theme}/${option.value}: OFF restores original outer/inner paints`);
+        }
+        check(getComputedStyle(menu).backgroundColor==='rgb(40, 40, 40)',`${theme}: OFF restores native player paint`);
+        rows[1].focus({preventScroll:true});const nativeFocus=getComputedStyle(rows[1]);
+        check(nativeFocus.outlineStyle==='solid'&&parseFloat(nativeFocus.outlineWidth)>0&&nativeFocus.outline===zeroFocus,`${theme}: zero retains the exact native OFF focus outline`);await enabled(true);
+      }
+      check(getComputedStyle(menu).opacity===menuOpacity&&getComputedStyle(rows.at(-1)).opacity===disabledOpacity, 'native popup and disabled opacity are unchanged');
+      check(rows.every((row,index)=>row.getAttribute('aria-checked')===rowStates[index]),'native checkbox/radio states are unchanged');
+      check(draft.value===draftValue,'input draft survives all shade/theme/OFF changes');
+    }catch(error){failures.push(error.message);}finally{
+      document.documentElement.toggleAttribute('dark',originalDark);select.value=originalKind;select.dispatchEvent(new Event('change',{bubbles:true}));
+      await input(master,originalMaster);await input(navigation,originalNavigation);await enabled(originalEnabled);checkButton.disabled=false;originalFocus?.focus?.({preventScroll:true});
+    }
+    report.dataset.status=failures.length?'fail':'pass';report.dataset.results=JSON.stringify({failures,checks});report.textContent=failures.length?'FAIL: '+failures.join('\n'):'PASS: '+checks.length+' dark/light, single-face, zero, OFF and original-state checks. Native-site behavior remains separate.';
+  };
+}
+if(fixtureParameters.has('chat')||fixtureParameters.has('playlist')||fixtureParameters.has('reading-surfaces')){
+  const diagnosticStyle=document.createElement('style');diagnosticStyle.textContent=`
+    html[data-fixture-backdrop] ytd-app::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;background:#fff}
+    html[data-fixture-backdrop="black"] ytd-app::before{background:#000}
+    html[data-fixture-backdrop] #yac-background{visibility:hidden!important}
+    #fixture-reading-controls{padding:12px;margin-top:12px;border-radius:8px;color:#eee;background:#222;line-height:1.5}
+    #fixture-reading-controls button{margin:3px;color:#eee;background:#404040}
+    #fixture-reading-result{display:block;white-space:pre-wrap}
+  `;document.head.append(diagnosticStyle);
+  const controls=document.createElement('section');controls.id='fixture-reading-controls';
+  controls.innerHTML='<strong>Reading contrast verification</strong><div><button id="fixture-light-theme">Light theme</button><button id="fixture-dark-theme">Dark theme</button><button id="fixture-white-backdrop">Static white backdrop</button><button id="fixture-black-backdrop">Static black backdrop</button><button id="fixture-ambient-backdrop">Ambient backdrop</button><button id="fixture-reading-top">Back to page top</button></div><button id="fixture-check-reading">Check dark/light + ON/OFF reading contrast</button><output id="fixture-reading-result">Ready. Checks use computed CSS paint over static black and white; no flashing test imagery.</output>';
+  document.querySelector('#below').append(controls);
+  const chatWindow=()=>document.querySelector('#chatframe')?.contentWindow;
+  const setTheme=dark=>{document.documentElement.toggleAttribute('dark',dark);chatWindow()?.fixtureSetChatTheme?.(dark);};
+  controls.querySelector('#fixture-light-theme').onclick=()=>setTheme(false);
+  controls.querySelector('#fixture-dark-theme').onclick=()=>setTheme(true);
+  controls.querySelector('#fixture-white-backdrop').onclick=()=>document.documentElement.setAttribute('data-fixture-backdrop','white');
+  controls.querySelector('#fixture-black-backdrop').onclick=()=>document.documentElement.setAttribute('data-fixture-backdrop','black');
+  controls.querySelector('#fixture-ambient-backdrop').onclick=()=>document.documentElement.removeAttribute('data-fixture-backdrop');
+  controls.querySelector('#fixture-reading-top').onclick=()=>window.scrollTo({top:0,behavior:'instant'});
+  const checkButton=controls.querySelector('#fixture-check-reading'),report=controls.querySelector('#fixture-reading-result');
+  checkButton.onclick=async()=>{
+    const failures=[],ratios=[],frame=document.querySelector('#chatframe'),originalDocument=frame?.contentDocument;
+    const dark=document.documentElement.hasAttribute('dark'),chatDark=originalDocument?.documentElement.hasAttribute('dark');
+    const toggle=document.querySelector('#yac-controls')?.shadowRoot?.querySelector('#yac-enabled')||document.querySelector('#yac-enabled');
+    if(!toggle||frame&&!chatWindow()?.fixtureCheckChatReadability){report.textContent='FAIL: controller/chat fixture is not ready; rerun after load';report.dataset.status='fail';return;}
+    const initialEnabled=toggle.checked,originalFocus=document.activeElement;
+    const waitPaint=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+    const setEnabled=async value=>{if(toggle.checked!==value){toggle.checked=value;toggle.dispatchEvent(new Event('input',{bubbles:true}));}await waitPaint();};
+    const check=(condition,message)=>{if(!condition)failures.push(message);};
+    const rgba=value=>{const values=value.match(/[\d.]+/g)?.map(Number);if(!values||values.length<3)throw new Error('Unsupported computed color: '+value);return [values[0],values[1],values[2],values[3]??1];};
+    const over=(face,background)=>face.slice(0,3).map((channel,index)=>channel*face[3]+background[index]*(1-face[3]));
+    const luminance=rgb=>rgb.map(channel=>{const value=channel/255;return value<=.04045?value/12.92:((value+.055)/1.055)**2.4;}).reduce((sum,value,index)=>sum+value*[.2126,.7152,.0722][index],0);
+    const contrast=(element,backdrop)=>{
+      const ancestors=[];for(let node=element;node&&node.localName!=='ytd-app';node=node.parentElement)ancestors.unshift(node);
+      let background=[backdrop,backdrop,backdrop];for(const ancestor of ancestors)background=over(rgba(getComputedStyle(ancestor).backgroundColor),background);
+      const a=luminance(over(rgba(getComputedStyle(element).color),background)),b=luminance(background);return (Math.max(a,b)+.05)/(Math.min(a,b)+.05);
+    };
+    const expectedSurface=(host,name)=>{const probe=document.createElement('span');probe.style.backgroundColor=`var(${name})`;host.append(probe);const paint=getComputedStyle(probe).backgroundColor;probe.remove();return paint;};
+    const checkContrast=(element,name)=>{for(const backdrop of [0,255]){const ratio=contrast(element,backdrop);ratios.push({name,backdrop,ratio:Number(ratio.toFixed(3))});check(ratio>=4.5,`${name} over ${backdrop?'white':'black'}: ${ratio.toFixed(2)} < 4.5`);}};
+    const playlist=document.querySelector('#fixture-playlist'),originalRows=[...(playlist?.querySelectorAll('ytd-playlist-panel-video-renderer')||[])],selectedRow=playlist?.querySelector('[selected]');
+    const readingPanes=fixtureParameters.has('reading-surfaces')?[document.getElementById('description'),document.getElementById('comments'),document.getElementById('related')]:[];
+    const paneFace=pane=>pane.id==='related'&&pane.querySelector('ytd-playlist-panel-renderer')?(pane.querySelector('ytd-watch-next-secondary-results-renderer ytd-playlist-panel-renderer')?pane.querySelector('ytd-item-section-renderer'):pane.querySelector('ytd-watch-next-secondary-results-renderer')):pane;
+    const paneFaces=pane=>pane.id==='comments'?[...pane.querySelectorAll('ytd-comments-header-renderer,ytd-comment-thread-renderer')]:[paneFace(pane)];
+    const draft=document.getElementById('fixture-comment-draft'),draftValue=draft?.value,media=document.getElementById('fixture-related-media'),mediaImage=media&&getComputedStyle(media).backgroundImage;
+    const member=document.getElementById('fixture-member-badge'),memberPaint=member&&getComputedStyle(member).backgroundColor;
+    checkButton.disabled=true;
+    try{
+      await setEnabled(true);
+      for(const themeDark of [true,false]){
+        setTheme(themeDark);const theme=themeDark?'dark':'light';
+        if(frame){const chat=chatWindow().fixtureCheckChatReadability();failures.push(...chat.failures.map(message=>`${theme} chat: ${message}`));ratios.push(...chat.ratios.map(item=>({...item,name:`${theme} chat ${item.name}`})));check(frame.contentDocument===originalDocument,`${theme}: theme switch retains the same iframe document`);}
+        if(playlist){
+          const header=playlist.querySelector('.header'),row=playlist.querySelector('ytd-playlist-panel-video-renderer:not([selected])'),copy=row.querySelector('.fixture-playlist-copy');
+          check(getComputedStyle(header).backgroundColor===expectedSurface(playlist,'--yac-reading-surface'),`${theme}: playlist header uses the shared reading face`);
+          check(getComputedStyle(row).backgroundColor===expectedSurface(playlist,'--yac-reading-surface'),`${theme}: nonplaying row uses the shared reading face`);
+          checkContrast(header.querySelector('h3'),`${theme} playlist header`);checkContrast(copy,`${theme} playlist row`);
+          row.querySelector('a').focus({preventScroll:true});
+          check(getComputedStyle(row).backgroundColor===expectedSurface(playlist,'--yac-reading-hover-surface'),`${theme}: focused row uses the shared hover face`);checkContrast(copy,`${theme} playlist focus`);
+          row.querySelector('a').blur();
+          check(getComputedStyle(selectedRow).backgroundColor===expectedSurface(playlist,'--yac-reading-hover-surface'),`${theme}: active queue/playlist row follows reading opacity while preserving its marker`);
+          check(playlist.querySelector('[selected]')===selectedRow&&originalRows.every(item=>item.isConnected),`${theme}: playing state and original row DOM are preserved`);
+        }
+        for(const pane of readingPanes){
+          for(const face of paneFaces(pane)){
+            if(pane.id==='related'||face.localName==='ytd-comments-header-renderer')check(getComputedStyle(face).backgroundColor==='rgba(0, 0, 0, 0)',`${theme}: ${face.localName} has no added card`);
+            else check(getComputedStyle(face).backgroundColor===expectedSurface(face,'--yac-reading-pane-surface'),`${theme}: ${face.localName} has one reading face`);
+            if(face.localName==='ytd-comment-thread-renderer')check(getComputedStyle(face).borderRadius==='16px',`${theme}: the native thread box has rounded paint`);
+            check(getComputedStyle(face).backdropFilter==='none'&&getComputedStyle(pane).backdropFilter==='none',`${theme}: ${pane.id} does not allocate a backdrop filter`);
+          }
+          if(pane.id==='comments')check(getComputedStyle(pane).backgroundColor==='rgba(0, 0, 0, 0)',`${theme}: comment collection does not paint a second face`);
+          // Recommendations intentionally have no pane; retain their native
+          // text/media instead of claiming bounded text contrast over a face.
+          if(pane.id==='description'||pane.id==='comments')for(const text of pane.querySelectorAll(pane.id==='description'?'.fixture-reading-heading,.fixture-reading-line,.fixture-reading-link':'.fixture-reading-line,.fixture-reading-link'))checkContrast(text,`${theme} ${pane.id} ${text.className}`);
+        }
+        if(readingPanes.length){check(getComputedStyle(document.getElementById('description').parentElement).backgroundColor==='rgba(0, 0, 0, 0)',`${theme}: title/channel have no added outer card`);check(draft.value===draftValue,`${theme}: comment draft is retained`);check(getComputedStyle(media).backgroundImage===mediaImage,`${theme}: thumbnail is unchanged`);check(getComputedStyle(member).backgroundColor===memberPaint,`${theme}: member color is unchanged`);check(getComputedStyle(document.getElementById('description')).backgroundColor===expectedSurface(document.getElementById('description'),'--yac-reading-pane-face'),`${theme}: description retains its native face`);}
+      }
+      await setEnabled(false);
+      for(const themeDark of [true,false]){
+        setTheme(themeDark);const theme=themeDark?'dark':'light';
+        if(frame){const chat=chatWindow().fixtureCheckChatReadability();failures.push(...chat.failures.map(message=>`${theme} OFF chat: ${message}`));check(!chat.active,`${theme}: OFF removes the chat-active class`);}
+        if(playlist){
+          const native=expectedSurface(playlist,'--fixture-playlist-face');
+          check(getComputedStyle(playlist.querySelector('.header')).backgroundColor===native&&getComputedStyle(playlist.querySelector('ytd-playlist-panel-video-renderer:not([selected])')).backgroundColor===native,`${theme}: OFF restores native playlist paint`);
+          check(getComputedStyle(selectedRow).backgroundColor===expectedSurface(playlist,'--fixture-playing-face'),`${theme}: OFF retains the playing face`);
+        }
+        for(const pane of readingPanes){
+          check(getComputedStyle(pane).backgroundColor===expectedSurface(pane,'--fixture-popup-base'),`${theme}: OFF restores native ${pane.id} paint`);
+          if(pane.id==='comments'){
+            for(const face of paneFaces(pane))check(getComputedStyle(face).backgroundColor==='rgba(0, 0, 0, 0)',`${theme}: OFF restores transparent native comment children`);
+          }else check(getComputedStyle(paneFace(pane)).backgroundColor===expectedSurface(pane,'--fixture-popup-base'),`${theme}: OFF restores native ${pane.id} text owner`);
+        }
+      }
+    }catch(error){failures.push(error.message);}finally{
+      setTheme(dark);if(frame)chatWindow()?.fixtureSetChatTheme?.(chatDark);
+      await setEnabled(initialEnabled);checkButton.disabled=false;originalFocus?.focus?.({preventScroll:true});
+    }
+    report.textContent=failures.length?'FAIL: '+failures.join('\n'):`PASS: local dark/light themes and ON/OFF restoration${readingPanes.length?', text panes/draft/media/semantic states':', native SVG/semantic/playing states'}; minimum measured text contrast ${Math.min(...ratios.map(item=>item.ratio)).toFixed(2)} (required 4.5)`;
+    report.dataset.status=failures.length?'fail':'pass';report.dataset.results=JSON.stringify({failures,ratios});
+  };
+}
+// Entry metadata and route controls belong to this local fixture only. The
+// original surface/chat checks keep their existing controls and callable APIs.
+const fixtureSettingsWatchRoute=new URL(location.href);fixtureSettingsWatchRoute.pathname='/watch';
+window.fixtureSettingsEntryState=()=>{
+  const launcher=document.getElementById('yac-launcher'),button=document.getElementById('yac-settings-button'),panel=document.getElementById('yac-controls'),root=panel?.shadowRoot;
+  const create=document.querySelector('ytd-masthead #end #buttons > ytd-button-renderer'),enabled=root?.querySelector('#yac-enabled');
+  const rectangle=node=>{if(!node)return null;const rect=node.getBoundingClientRect();return {x:rect.x,y:rect.y,width:rect.width,height:rect.height,top:rect.top,right:rect.right,bottom:rect.bottom,left:rect.left};};
+  let focused=document.activeElement;while(focused?.shadowRoot?.activeElement)focused=focused.shadowRoot.activeElement;
+  return {pathname:location.pathname,fullscreen:!!document.fullscreenElement,focused:focused?.id||focused?.localName||null,
+    masthead:rectangle(document.querySelector('ytd-masthead')),create:rectangle(create),
+    launcher:{count:document.querySelectorAll('#yac-launcher').length,parent:launcher?.parentElement?.id||null,afterCreate:!!launcher&&!!create&&launcher.getBoundingClientRect().left>=create.getBoundingClientRect().right,hidden:launcher?.hidden??null,rectangle:rectangle(launcher)},
+    button:{count:document.querySelectorAll('#yac-settings-button').length,hidden:button?.hidden??null,expanded:button?.getAttribute('aria-expanded')||null,rectangle:rectangle(button),svg:rectangle(button?.querySelector('svg'))},
+    panel:{hidden:panel?.hidden??null,parent:panel?.parentElement?.localName||null,position:panel?getComputedStyle(panel).position:null,rectangle:rectangle(panel)},
+    enabled:{inShadow:!!enabled&&enabled.getRootNode()===root,inLightDom:!!document.querySelector('#yac-enabled'),checked:enabled?.checked??null,background:enabled?getComputedStyle(enabled).backgroundColor:null}};
+};
+window.fixtureNavigateSettingsEntry=destination=>{
+  if(!['home','watch'].includes(destination))throw new TypeError('Expected home or watch');
+  const next=new URL(fixtureSettingsWatchRoute);if(destination==='home'){next.pathname='/';next.searchParams.delete('v');}
+  history.replaceState(null,'',next);document.dispatchEvent(new Event('yt-navigate-finish'));
+  return window.fixtureSettingsEntryState();
+};
+if(fixtureParameters.has('settings-entry')){
+  const controls=document.createElement('section');controls.id='fixture-settings-entry-controls';controls.style.cssText='margin:12px 0;padding:12px;border:1px solid #8888;border-radius:12px';
+  const heading=document.createElement('strong');heading.textContent='Native topbar settings entry';
+  const home=document.createElement('a');home.id='fixture-entry-home';home.href='/';home.textContent='Navigate to Home';
+  const restore=document.createElement('a');restore.id='fixture-entry-watch';restore.href='/watch';restore.textContent='Return to Watch';
+  const inspect=document.createElement('button');inspect.id='fixture-entry-inspect';inspect.textContent='Inspect entry metadata';
+  const output=document.createElement('pre');output.id='fixture-settings-entry-result';output.style.cssText='white-space:pre-wrap;font:12px ui-monospace,monospace';output.textContent='Use the settings entry next to Create. Home keeps the panel and entrance. Inspect geometry and the ShadowRoot switch here.';
+  const report=()=>{const state=window.fixtureSettingsEntryState();output.textContent=JSON.stringify(state,null,2);output.dataset.results=JSON.stringify(state);};
+  home.onclick=event=>{event.preventDefault();window.fixtureNavigateSettingsEntry('home');report();};restore.onclick=event=>{event.preventDefault();window.fixtureNavigateSettingsEntry('watch');report();};inspect.onclick=report;
+  controls.append(heading,document.createElement('br'),home,restore,inspect,output);document.getElementById('below').append(controls);
+}
+</script></body></html>
